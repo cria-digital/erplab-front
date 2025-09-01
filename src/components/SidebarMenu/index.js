@@ -29,7 +29,7 @@ import Suport from './components/suport'
 import Tutos from './components/tutos'
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
   const [section, setSection] = useState('Atendimento')
 
   const sections = {
@@ -48,7 +48,7 @@ const Sidebar = () => {
         style={{ width: isOpen ? '369px' : '76px' }}
         className={`flex flex-col rounded-[8px] bg-[#171717] transition-all duration-300 ease-in-out`}
         onMouseEnter={() => setIsOpen(true)}
-        // onMouseLeave={() => setIsOpen(false)}
+        onMouseLeave={() => setIsOpen(false)}
       >
         <div className="flex h-[63px] items-center justify-center text-[#494949]">
           LOGO
