@@ -16,7 +16,7 @@ const Service = () => {
           <p className={`${Outfit400.className} text-[16px] text-[#A1A1A1]`}>
             Fila de Atendimento
           </p>
-          <div className="flex h-[32px] w-[27px] items-center justify-center rounded bg-[#F9852E] text-white">
+          <div className="text-whites flex h-[32px] w-[27px] items-center justify-center rounded bg-[#F9852E]">
             <p className={`${Outfit400.className}`}>15</p>
           </div>
         </div>
