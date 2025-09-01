@@ -7,10 +7,10 @@ const Service = () => {
   const pathname = usePathname()
 
   return (
-    <div className="flex flex-col gap-5 px-[12px]">
+    <div className="flex w-full flex-col gap-5 px-[12px]">
       <Link href="/atendimento/fila" className="w-full">
         <div
-          className={`${pathname === '/atendimento/fila' ? 'bg-[#2B2B2B]' : ''} flex h-[44px] items-center gap-5 rounded-[4px] px-2`}
+          className={`${pathname === '/atendimento/fila' ? 'bg-[#2B2B2B]' : ''} flex h-[44px] w-full items-center gap-5 rounded-[4px] px-2 hover:bg-[#2B2B2B]`}
         >
           <Layer size="28" color="#A1A1A1" />
           <p className={`${Outfit400.className} text-[16px] text-[#A1A1A1]`}>
@@ -23,7 +23,7 @@ const Service = () => {
       </Link>
       <Link href="/atendimento/pacientes" className="w-full">
         <div
-          className={`${pathname === '/atendimento/pacientes' ? 'bg-[#2B2B2B]' : ''} flex h-[44px] items-center gap-5 rounded-[4px] px-2`}
+          className={`${pathname === '/atendimento/pacientes' ? 'bg-[#2B2B2B]' : ''} flex h-[44px] w-full items-center gap-5 rounded-[4px] px-2 hover:bg-[#2B2B2B]`}
         >
           <Profile2User size="28" color="#A1A1A1" />
           <p className={`${Outfit400.className} text-[16px] text-[#A1A1A1]`}>
