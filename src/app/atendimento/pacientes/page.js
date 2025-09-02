@@ -14,6 +14,7 @@ import {
 } from 'iconsax-reactjs'
 import Image from 'next/image'
 import { useState } from 'react'
+import NovoPaciente from './modal-content/novopaciente'
 
 import checkGreen from '../../../../public/assets/images/directions.png'
 
@@ -233,7 +234,9 @@ export default function Pacientes() {
       <ModalUp
         isOpen={openModalAddPatient}
         onClose={() => setOpenModalAddPatient(false)}
-      ></ModalUp>
+      >
+        <NovoPaciente />
+      </ModalUp>
     </div>
   )
 }
