@@ -1,3 +1,5 @@
+'use client'
+import ModalUp from '@/components/ModalUp'
 import { Outfit300, Outfit400, Outfit700 } from '@/fonts'
 import {
   AddSquare,
@@ -11,10 +13,13 @@ import {
   Whatsapp,
 } from 'iconsax-reactjs'
 import Image from 'next/image'
+import { useState } from 'react'
 
 import checkGreen from '../../../../public/assets/images/directions.png'
 
 export default function Pacientes() {
+  const [openModalAddPatient, setOpenModalAddPatient] = useState(false)
+
   return (
     <div className="mt-[8px] mr-[8px] flex h-screen flex-1 flex-col rounded-[20px] bg-white">
       <div className="flex h-[84px] w-full items-center justify-between border-b-1 border-[#E7E7E7]">
@@ -24,6 +29,8 @@ export default function Pacientes() {
           PACIENTES
         </span>
         <button
+          type="botton"
+          onClick={() => setOpenModalAddPatient(true)}
           className={`mr-[32px] flex h-[44px] w-[154px] items-center justify-center gap-2 rounded-[8px] bg-[#0F9B7F]`}
         >
           <AddSquare size="32" color="#ffffff" variant="Bulk" />
@@ -223,6 +230,10 @@ export default function Pacientes() {
           </tbody>
         </table>
       </div>
+      <ModalUp
+        isOpen={openModalAddPatient}
+        onClose={() => setOpenModalAddPatient(false)}
+      ></ModalUp>
     </div>
   )
 }
