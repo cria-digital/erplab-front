@@ -1,24 +1,24 @@
 // components/Modal.js
-import React, { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect } from 'react'
 
-const Modal = ({ isOpen, onClose, children }) => {
+const ModalLeft = ({ isOpen, onClose, children }) => {
   // Efeito para prevenir o scroll do body quando a modal estiver aberta
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden'
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = 'unset'
     }
     return () => {
-      document.body.style.overflow = 'unset'; // Limpa ao desmontar
-    };
-  }, [isOpen]);
+      document.body.style.overflow = 'unset' // Limpa ao desmontar
+    }
+  }, [isOpen])
 
   const overlayVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.3 } }, // Ajustei a duração para ser mais rápida
-  };
+  }
 
   const modalVariants = {
     hidden: {
@@ -43,7 +43,7 @@ const Modal = ({ isOpen, onClose, children }) => {
         damping: 30,
       },
     },
-  };
+  }
 
   return (
     <AnimatePresence>
@@ -53,7 +53,7 @@ const Modal = ({ isOpen, onClose, children }) => {
         >
           {/* Overlay */}
           <motion.div
-            className="absolute inset-0 bg-opacity-50"
+            className="bg-opacity-50 absolute inset-0"
             variants={overlayVariants}
             initial="hidden"
             animate="visible"
@@ -63,7 +63,7 @@ const Modal = ({ isOpen, onClose, children }) => {
 
           {/* Conteúdo da Modal */}
           <motion.div
-            className="relative bg-white shadow-lg min-h-screen w-full" // Ajustado width para dispositivos maiores
+            className="relative min-h-screen w-full bg-white shadow-lg" // Ajustado width para dispositivos maiores
             variants={modalVariants}
             initial="hidden"
             animate="visible"
@@ -75,7 +75,7 @@ const Modal = ({ isOpen, onClose, children }) => {
         </motion.div>
       )}
     </AnimatePresence>
-  );
-};
+  )
+}
 
-export default Modal;
+export default ModalLeft

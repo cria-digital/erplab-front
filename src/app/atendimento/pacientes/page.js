@@ -1,4 +1,5 @@
 'use client'
+import ModalLeft from '@/components/ModalLeft'
 import ModalUp from '@/components/ModalUp'
 import { Outfit300, Outfit400, Outfit700 } from '@/fonts'
 import {
@@ -15,11 +16,13 @@ import {
 import Image from 'next/image'
 import { useState } from 'react'
 import NovoPaciente from './modal-content/novopaciente'
+import ProfilePatient from './modal-content/perfilpaciente'
 
 import checkGreen from '../../../../public/assets/images/directions.png'
 
 export default function Pacientes() {
   const [openModalAddPatient, setOpenModalAddPatient] = useState(false)
+  const [openModalProfilePatient, setOpenModalProfilePatient] = useState(false)
 
   return (
     <div className="mt-[8px] mr-[8px] flex h-screen flex-1 flex-col rounded-[20px] bg-white">
@@ -216,7 +219,10 @@ export default function Pacientes() {
               <td
                 className={`text-[14px] ${Outfit300.className} text-center text-[#383838]`}
               >
-                <div className="flex h-full items-center justify-center">
+                <div
+                  className="flex h-full items-center justify-center"
+                  onClick={() => setOpenModalProfilePatient(true)}
+                >
                   <Book size="28" color="#737373" />
                 </div>
               </td>
@@ -235,8 +241,14 @@ export default function Pacientes() {
         isOpen={openModalAddPatient}
         onClose={() => setOpenModalAddPatient(false)}
       >
-        <NovoPaciente />
+        <NovoPaciente onClose={() => setOpenModalAddPatient(false)} />
       </ModalUp>
+      <ModalLeft
+        isOpen={openModalProfilePatient}
+        onClose={() => setOpenModalProfilePatient(false)}
+      >
+        <ProfilePatient />
+      </ModalLeft>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import { Outfit300, Outfit400, Outfit500 } from '@/fonts'
 import { Barcode } from 'iconsax-reactjs'
 
-const NovoPaciente = () => {
+const NovoPaciente = ({ onClose }) => {
   return (
     <div className="flex h-screen flex-col bg-[#F9F9F9]">
       <header className="flex h-[88px] items-center justify-between border-b border-[#E7E7E7] bg-[#fff] px-[48px]">
@@ -25,7 +25,11 @@ const NovoPaciente = () => {
             </span>
           </button>
           <div className="border border-[#BBBBBB]" />
-          <button className="flex h-[44px] w-[108px] items-center justify-evenly rounded-[8px] border border-[#F23434]">
+          <button
+            type="button"
+            onClick={() => onClose()}
+            className="flex h-[44px] w-[108px] items-center justify-evenly rounded-[8px] border border-[#F23434]"
+          >
             <span className={`${Outfit400.className} text-[#F23434] uppercase`}>
               Cancelar
             </span>
