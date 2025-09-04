@@ -1,3 +1,5 @@
+'use client'
+import ModalUp from '@/components/ModalUp'
 import { Outfit300, Outfit400 } from '@/fonts'
 import {
   ArrowDown2,
@@ -7,10 +9,16 @@ import {
   SearchStatus,
 } from 'iconsax-reactjs'
 import Image from 'next/image'
+import { useState } from 'react'
+
+import RegisterAccountPayable from './modal-content/registerAccountsPayable'
 
 import checkGreen from '../../../../public/assets/images/directions.png'
 
 export default function Fila() {
+  const [openModalRegisterAccount, setOpenModalRegisterAccount] =
+    useState(false)
+
   return (
     <div className="mt-[8px] mr-[8px] flex h-screen flex-1 flex-col rounded-[20px] bg-white">
       <div className="flex h-[84px] w-full items-center justify-between border-b-1 border-[#E7E7E7]">
@@ -87,7 +95,11 @@ export default function Fila() {
               PAGAR CONTAS
             </span>
           </button>
-          <button className="flex h-[44px] items-center justify-evenly rounded-[8px] bg-[#0F9B7F] px-2">
+          <button
+            type="button"
+            className="flex h-[44px] items-center justify-evenly rounded-[8px] bg-[#0F9B7F] px-2"
+            onClick={() => setOpenModalRegisterAccount(true)}
+          >
             <span className={`${Outfit400.className} text-[#FFF] uppercase`}>
               CADASTRAR CONTA
             </span>
@@ -266,6 +278,14 @@ export default function Fila() {
           </tbody>
         </table>
       </div>
+      <ModalUp
+        isOpen={openModalRegisterAccount}
+        onClose={() => setOpenModalRegisterAccount(false)}
+      >
+        <RegisterAccountPayable
+          onClose={() => setOpenModalRegisterAccount(false)}
+        />
+      </ModalUp>
     </div>
   )
 }
