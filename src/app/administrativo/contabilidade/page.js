@@ -1,6 +1,8 @@
 'use client'
+import ModalLeft from '@/components/ModalLeft'
 import ModalUp from '@/components/ModalUp'
 import { Outfit300, Outfit400 } from '@/fonts'
+import { Dropdown, DropdownItem } from 'flowbite-react'
 import {
   ArrowDown2,
   Calendar,
@@ -11,13 +13,19 @@ import {
 import Image from 'next/image'
 import { useState } from 'react'
 
+import PassOn from './modal-content/passOn'
+import PayBills from './modal-content/payBills'
 import RegisterAccountPayable from './modal-content/registerAccountsPayable'
+import ViewAccount from './modal-content/viewAccount'
 
 import checkGreen from '../../../../public/assets/images/directions.png'
 
 export default function Fila() {
   const [openModalRegisterAccount, setOpenModalRegisterAccount] =
     useState(false)
+  const [openModalPayBills, setOpenModalPayBills] = useState(false)
+  const [openModalPassOn, setOpenModalPassOn] = useState(false)
+  const [openModalViewAccount, setOpenModalViewAccount] = useState(false)
 
   return (
     <div className="mt-[8px] mr-[8px] flex h-screen flex-1 flex-col rounded-[20px] bg-white">
@@ -84,13 +92,21 @@ export default function Fila() {
               RELATÓRIO
             </span>
           </button>
-          <button className="flex h-[44px] items-center justify-evenly rounded-[8px] border border-[#0F9B7F] px-2">
+          <button
+            type="button"
+            className="flex h-[44px] items-center justify-evenly rounded-[8px] border border-[#0F9B7F] px-2"
+            onClick={() => setOpenModalPassOn(true)}
+          >
             <span className={`${Outfit400.className} text-[#0F9B7F] uppercase`}>
               REPASSE
             </span>
           </button>
           <div className="h-[40px] border border-[#BBBBBB]" />
-          <button className="flex h-[44px] items-center justify-evenly rounded-[8px] border border-[#0F9B7F] px-2">
+          <button
+            type="button"
+            className="flex h-[44px] items-center justify-evenly rounded-[8px] border border-[#0F9B7F] px-2"
+            onClick={() => setOpenModalPayBills(true)}
+          >
             <span className={`${Outfit400.className} text-[#0F9B7F] uppercase`}>
               PAGAR CONTAS
             </span>
@@ -271,7 +287,34 @@ export default function Fila() {
                 className={`text-[14px] ${Outfit300.className} text-center text-[#383838]`}
               >
                 <div className="flex h-full items-center justify-center">
-                  <More size="28" color="#737373" />
+                  <Dropdown
+                    label=""
+                    dismissOnClick={false}
+                    renderTrigger={() => <More size="28" color="#737373" />}
+                    placement="left-start"
+                  >
+                    <DropdownItem
+                      className={`${Outfit300.className} text-[16px] text-[#8A8A8A]`}
+                      onClick={() => setOpenModalViewAccount(true)}
+                    >
+                      Visualizar
+                    </DropdownItem>
+                    <DropdownItem
+                      className={`${Outfit300.className} text-[16px] text-[#8A8A8A]`}
+                    >
+                      Pagar/Agendar
+                    </DropdownItem>
+                    <DropdownItem
+                      className={`${Outfit300.className} text-[16px] text-[#8A8A8A]`}
+                    >
+                      Replicar conta
+                    </DropdownItem>
+                    <DropdownItem
+                      className={`${Outfit300.className} text-[16px] text-[#8A8A8A]`}
+                    >
+                      Cancelar
+                    </DropdownItem>
+                  </Dropdown>
                 </div>
               </td>
             </tr>
@@ -286,6 +329,24 @@ export default function Fila() {
           onClose={() => setOpenModalRegisterAccount(false)}
         />
       </ModalUp>
+      <ModalUp
+        isOpen={openModalPayBills}
+        onClose={() => setOpenModalPayBills(false)}
+      >
+        <PayBills onClose={() => setOpenModalPayBills(false)} />
+      </ModalUp>
+      <ModalUp
+        isOpen={openModalPassOn}
+        onClose={() => setOpenModalPassOn(false)}
+      >
+        <PassOn onClose={() => setOpenModalPassOn(false)} />
+      </ModalUp>
+      <ModalLeft
+        isOpen={openModalViewAccount}
+        onClose={() => setOpenModalViewAccount(false)}
+      >
+        <ViewAccount />
+      </ModalLeft>
     </div>
   )
 }
