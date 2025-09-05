@@ -40,7 +40,7 @@ const PassOn = ({ onClose }) => {
             <span
               className={`${Outfit400.className} text-[16px] text-[#0F9B7F]`}
             >
-              Dados principais
+              Dados do repasse
             </span>
             <div className="flex flex-1 flex-col justify-between">
               <div className="flex items-center gap-[16px]">
