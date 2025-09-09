@@ -8,9 +8,12 @@ const Configs = () => {
 
   return (
     <div className="flex w-full flex-col gap-5 px-[12px]">
-      <Link href="/configuracoes/cadastros-gerais" className="w-ful">
+      <Link
+        href="/configuracoes/cadastros-gerais/unidades-de-saude"
+        className="w-ful"
+      >
         <div
-          className={`${pathname === '/configuracoes/cadastros-gerais' ? 'bg-[#2B2B2B]' : ''} flex h-[44px] w-full items-center gap-5 rounded-[4px] px-2 hover:bg-[#2B2B2B]`}
+          className={`${pathname === '/configuracoes/cadastros-gerais/unidades-de-saude' ? 'bg-[#2B2B2B]' : ''} flex h-[44px] w-full items-center gap-5 rounded-[4px] px-2 hover:bg-[#2B2B2B]`}
         >
           <AddSquare size="28" color="#A1A1A1" />
           <p className={`${Outfit400.className} text-[16px] text-[#A1A1A1]`}>
