@@ -4,7 +4,7 @@ import { createContext, useContext, useState } from 'react'
 
 const ModalContext = createContext(undefined)
 
-export function AuthProvider({ children }) {
+export function ModalsProvider({ children }) {
   const [modalRegister, setModalRegister] = useState(null)
 
   return (

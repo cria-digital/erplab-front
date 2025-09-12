@@ -1,5 +1,6 @@
+import { ModalsProvider } from '@/contexts/modals'
+import { AuthProvider } from '@/contexts/auth'
 import './globals.css'
-import { AuthProvider } from '@/contexts/modals'
 
 export const metadata = {
   title: 'ERP-Lab',
@@ -10,7 +11,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <AuthProvider>
-        <body>{children}</body>
+        <ModalsProvider>
+          <body>{children}</body>
+        </ModalsProvider>
       </AuthProvider>
     </html>
   )
