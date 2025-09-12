@@ -4,14 +4,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 export default function ModalFramer({ open, setOpen, children }) {
   return (
     <div className="flex h-screen items-center justify-center">
-      {/* Botão para abrir */}
-      <button
-        onClick={() => setOpen(true)}
-        className="rounded-lg bg-[#0F9B7F] px-4 py-2 text-white"
-      >
-        Abrir Modal
-      </button>
-
       <AnimatePresence>
         {open && (
           <div

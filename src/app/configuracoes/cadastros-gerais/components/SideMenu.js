@@ -16,9 +16,9 @@ const SideMenu = () => {
   return (
     <div className="w-[281px] rounded-[8px] bg-[#F9F9F9] p-[16px]">
       <div className="flex h-[24px] items-center justify-between">
-        <text className={`${Outfit400.className} text-[#222222]`}>
+        <span className={`${Outfit400.className} text-[#222222]`}>
           Principais
-        </text>
+        </span>
         {openMenuPrincipais ? (
           <ArrowUp2
             size="28"
@@ -131,9 +131,9 @@ const SideMenu = () => {
       )}
 
       <div className="mt-[16px] flex h-[24px] items-center justify-between">
-        <text className={`${Outfit400.className} text-[#222222]`}>
+        <span className={`${Outfit400.className} text-[#222222]`}>
           Estrutura
-        </text>
+        </span>
         {openMenuEstrutura ? (
           <ArrowUp2
             size="28"
