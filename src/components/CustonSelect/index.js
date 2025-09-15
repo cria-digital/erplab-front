@@ -3,7 +3,13 @@ import { Outfit400 } from '@/fonts'
 import { ArrowDown2, ArrowUp2 } from 'iconsax-reactjs'
 import { useEffect, useRef, useState } from 'react'
 
-const SelectUser = ({ select, setSelect, options = [], readOnly = false }) => {
+const SelectUser = ({
+  select,
+  setSelect,
+  options = [],
+  placeholder = '',
+  readOnly = false,
+}) => {
   const [mostrarBandeja, setMostrarBandeja] = useState(false)
   const inputRef = useRef(null)
   const bandejaRef = useRef(null)
@@ -30,15 +36,20 @@ const SelectUser = ({ select, setSelect, options = [], readOnly = false }) => {
   return (
     <div style={{ position: 'relative', width: '100%' }}>
       <div
-        className="flex h-[40px] items-center justify-between rounded-[8px] border-1 border-[#A9A9A9] px-[16px]"
+        className="flex h-[40px] items-center justify-between rounded-[8px] border-1 border-[#A9A9A9] px-2"
         onClick={readOnly ? null : () => setMostrarBandeja(true)}
         ref={inputRef}
       >
-        <p
-          className={`text-[16px] ${Outfit400.className} text-[#565656] hover:text-[#FFF]`}
-        >
-          {select?.label}
-        </p>
+        {select ? (
+          <p className={`${Outfit400.className} text-[#565656]`}>
+            {select?.label}
+          </p>
+        ) : (
+          <p className={`${Outfit400.className} text-[#a9a9a9]`}>
+            {placeholder}
+          </p>
+        )}
+
         {mostrarBandeja ? (
           <ArrowUp2
             size="24"

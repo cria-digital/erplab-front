@@ -1,6 +1,8 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
+export const TOKEN_KEY = 'token'
+
 export async function middleware(request) {
   const cookiesStore = await cookies() // ✅
   const token = cookiesStore.get('token')?.value

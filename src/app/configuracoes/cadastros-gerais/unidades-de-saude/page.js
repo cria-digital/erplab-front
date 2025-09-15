@@ -1,4 +1,9 @@
+'use client'
+import ModalLeft from '@/components/ModalLeft'
+import ModalUp from '@/components/ModalUp'
+import { useModal } from '@/contexts/modals'
 import { Outfit300, Outfit400, Outfit700 } from '@/fonts'
+import { listAllUnits } from '@/helpers'
 import {
   ArrowLeft2,
   ArrowRight2,
@@ -9,8 +14,47 @@ import {
   SearchStatus,
   TickCircle,
 } from 'iconsax-reactjs'
+import { useEffect, useState } from 'react'
+import { IsActive } from './components/isActive'
+import ProfileUnitHealth from './modal-content/profileUnitOfHealth'
+import RegisterUnitOfHealth from './modal-content/registerUnitOfHealth'
 
 const UnitOfHealth = () => {
+  const [units, setUnits] = useState([])
+  const { modalRegister, setModalRegister } = useModal()
+  const [openModalProfileuUnit, setOpenModalProfileuUnit] = useState(false)
+  const [selectedUnit, setSelectedUnit] = useState({})
+
+  useEffect(() => {
+    const findData = async () => {
+      try {
+        const unts = await listAllUnits()
+
+        if (unts.success) {
+          setUnits(unts.data.data)
+          console.log(unts.data.data)
+        }
+      } catch (error) {
+        console.log('erro', error)
+      }
+    }
+
+    findData()
+  }, [])
+
+  const findData = async () => {
+    try {
+      const unts = await listAllUnits()
+
+      if (unts.success) {
+        setUnits(unts.data.data)
+        console.log(unts.data.data)
+      }
+    } catch (error) {
+      console.log('erro', error)
+    }
+  }
+
   return (
     <div className="flex flex-col gap-[32px]">
       <div className="flex h-[84px] items-center justify-between rounded-[16px] bg-[#F9F9F9]">
@@ -97,56 +141,79 @@ const UnitOfHealth = () => {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100 overflow-y-hidden">
-          <tr className="h-[64px] border-b border-[#D9D9D9] bg-white py-[5px]">
-            <td
-              className={`text-[14px] ${Outfit300.className} text-center text-[#383838]`}
-            >
-              0001
-            </td>
-            <td
-              className={`text-[14px] ${Outfit300.className} text-start text-[#383838]`}
-            >
-              Unidade Marechal
-            </td>
-            <td className={`text-[14px] ${Outfit300.className} text-[#383838]`}>
-              99.999.999/0001-00
-            </td>
-            <td className={`text-[14px] ${Outfit300.className} text-[#383838]`}>
-              Fabíola
-            </td>
-            <td className={`text-[14px] ${Outfit300.className} text-[#383838]`}>
-              São Paulo
-            </td>
-            <td className={`text-[14px] ${Outfit300.className} text-[#383838]`}>
-              <p>s</p>
-            </td>
-            <td>
-              <div className="flex h-full items-center justify-center">
-                <TickCircle size="28" color="#2CB04B" variant="Bulk" />
-              </div>
-            </td>
-            <td
-              className={`text-[14px] ${Outfit300.className} text-center text-[#383838]`}
-            >
-              <div className="flex h-full items-center justify-center">
-                <Edit2 size="28" color="#737373" />
-              </div>
-            </td>
-            <td
-              className={`text-[14px] ${Outfit300.className} text-center text-[#383838]`}
-            >
-              <div className="flex h-full items-center justify-center">
-                <Book size="28" color="#737373" />
-              </div>
-            </td>
-            <td
-              className={`text-[14px] ${Outfit300.className} text-center text-[#383838]`}
-            >
-              <div className="flex h-full items-center justify-center">
-                <More size="28" color="#737373" />
-              </div>
-            </td>
-          </tr>
+          {units?.map((item, index) => {
+            return (
+              <tr
+                className="h-[64px] border-b border-[#D9D9D9] bg-white py-[5px]"
+                key={index.toString()}
+              >
+                <td
+                  className={`text-[14px] ${Outfit300.className} text-center text-[#383838]`}
+                >
+                  {item.codigoInterno}
+                </td>
+                <td
+                  className={`text-[14px] ${Outfit300.className} text-start text-[#383838]`}
+                >
+                  {item.nomeUnidade}
+                </td>
+                <td
+                  className={`text-[14px] ${Outfit300.className} text-[#383838]`}
+                >
+                  {item.cnpj}
+                </td>
+                <td
+                  className={`text-[14px] ${Outfit300.className} text-[#383838]`}
+                >
+                  {item.nomeResponsavel}
+                </td>
+                <td
+                  className={`text-[14px] ${Outfit300.className} text-[#383838]`}
+                >
+                  {item.cidade}
+                </td>
+                <td
+                  className={`text-[14px] ${Outfit300.className} text-[#383838]`}
+                >
+                  <div className="flex h-full items-center justify-center">
+                    <IsActive active={item.ativo} />
+                  </div>
+                </td>
+                <td>
+                  <div className="flex h-full items-center justify-center">
+                    <TickCircle size="28" color="#2CB04B" variant="Bulk" />
+                  </div>
+                </td>
+                <td
+                  className={`text-[14px] ${Outfit300.className} text-center text-[#383838]`}
+                >
+                  <div className="flex h-full items-center justify-center">
+                    <Edit2 size="28" color="#737373" />
+                  </div>
+                </td>
+                <td
+                  className={`text-[14px] ${Outfit300.className} text-center text-[#383838]`}
+                >
+                  <div
+                    className="flex h-full items-center justify-center"
+                    onClick={() => {
+                      setOpenModalProfileuUnit(true)
+                      setSelectedUnit(item)
+                    }}
+                  >
+                    <Book size="28" color="#737373" />
+                  </div>
+                </td>
+                <td
+                  className={`text-[14px] ${Outfit300.className} text-center text-[#383838]`}
+                >
+                  <div className="flex h-full items-center justify-center">
+                    <More size="28" color="#737373" />
+                  </div>
+                </td>
+              </tr>
+            )
+          })}
         </tbody>
       </table>
       <div className="flex h-[40px] items-center justify-between">
@@ -171,6 +238,18 @@ const UnitOfHealth = () => {
           <ArrowRight2 size="28" color="#D9D9D9" />
         </div>
       </div>
+      <ModalUp isOpen={modalRegister} onClose={() => setModalRegister(false)}>
+        <RegisterUnitOfHealth
+          onClose={() => setModalRegister(false)}
+          findData={() => findData()}
+        />
+      </ModalUp>
+      <ModalLeft
+        isOpen={openModalProfileuUnit}
+        onClose={() => setOpenModalProfileuUnit(false)}
+      >
+        <ProfileUnitHealth unit={selectedUnit} />
+      </ModalLeft>
     </div>
   )
 }

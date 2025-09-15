@@ -1,4 +1,5 @@
 'use cliente'
+import { useModal } from '@/contexts/modals'
 import { CloseSquare } from 'iconsax-reactjs'
 import { useState } from 'react'
 
@@ -13,9 +14,17 @@ import Principais from './components/principais'
 
 const SelectRegister = ({ setOpenModalRegister, selectedCategorie }) => {
   const [category, setCategory] = useState(selectedCategorie)
+  const { setModalRegister } = useModal()
 
   const steps = {
-    principais: <Principais />,
+    principais: (
+      <Principais
+        setModalRegister={() => {
+          setOpenModalRegister(false)
+          setModalRegister(true)
+        }}
+      />
+    ),
     empresas: <Empresas />,
     estrutura: <Estrutura />,
     documentacao: <Documentacao />,

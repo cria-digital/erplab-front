@@ -35,28 +35,32 @@ const RootLayout = ({ children }) => {
         <SideMenu />
         <main className="flex-1">{children}</main>
       </div>
-      <ModalFramer
-        open={openModalCategorie}
-        setOpen={() => setOpenModalCategorie(!openModalCategorie)}
-      >
-        <SelectCategory
-          setOpenModalCategorie={() => setOpenModalCategorie(false)}
-          setSelectCategorie={(e) => {
-            setSelectCategorie(e)
-            setOpenModalCategorie(false)
-            setOpenModalRegister(true)
-          }}
-        />
-      </ModalFramer>
-      <ModalFramer
-        open={openModalRegister}
-        setOpen={() => setOpenModalRegister(!openModalRegister)}
-      >
-        <SelectRegister
-          setOpenModalRegister={() => setOpenModalRegister(false)}
-          selectedCategorie={selectedCategorie}
-        />
-      </ModalFramer>
+      {openModalCategorie && (
+        <ModalFramer
+          open={openModalCategorie}
+          setOpen={() => setOpenModalCategorie(!openModalCategorie)}
+        >
+          <SelectCategory
+            setOpenModalCategorie={() => setOpenModalCategorie(false)}
+            setSelectCategorie={(e) => {
+              setSelectCategorie(e)
+              setOpenModalCategorie(false)
+              setOpenModalRegister(true)
+            }}
+          />
+        </ModalFramer>
+      )}
+      {openModalRegister && (
+        <ModalFramer
+          open={openModalRegister}
+          setOpen={() => setOpenModalRegister(!openModalRegister)}
+        >
+          <SelectRegister
+            setOpenModalRegister={() => setOpenModalRegister(false)}
+            selectedCategorie={selectedCategorie}
+          />
+        </ModalFramer>
+      )}
     </div>
   )
 }
