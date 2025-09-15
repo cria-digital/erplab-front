@@ -29,10 +29,16 @@ import Service from './components/service'
 import Suport from './components/suport'
 import Tutos from './components/tutos'
 
+import { Exit } from '@/helpers'
+
+import { useAuth } from '@/contexts/auth'
+
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [section, setSection] = useState('')
   const pathname = usePathname()
+
+  const { logout } = useAuth()
 
   useEffect(() => {
     const a = () => {
@@ -42,6 +48,11 @@ const Sidebar = () => {
 
     a()
   }, [pathname, isOpen])
+
+  const handleLogout = () => {
+    Exit()
+    logout()
+  }
 
   const sections = {
     atendimento: <Service />,
@@ -259,12 +270,10 @@ const Sidebar = () => {
                     </p>
                   </div>
                 </Link>
-                <Link
-                  href="/atendimento/dashboard"
-                  className="w-full px-[12px]"
-                >
+                <div className="w-full px-[12px]">
                   <div
                     className={`${pathname === '/atendimento/dashboard' ? 'bg-[#2B2B2B]' : ''} flex h-[44px] w-full items-center gap-5 rounded-[4px] px-2 hover:bg-[#2B2B2B]`}
+                    onClick={() => handleLogout()}
                   >
                     <Logout size="28" color="#A1A1A1" />
                     <p
@@ -273,7 +282,7 @@ const Sidebar = () => {
                       Sair da conta
                     </p>
                   </div>
-                </Link>
+                </div>
               </div>
             </div>
           </div>
