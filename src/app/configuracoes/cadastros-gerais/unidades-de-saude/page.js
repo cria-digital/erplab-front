@@ -15,7 +15,7 @@ import {
   TickCircle,
 } from 'iconsax-reactjs'
 import { useEffect, useState } from 'react'
-import { IsActive } from './components/isActive'
+import { IsActive } from '../../../../components/IsActive'
 import ProfileUnitHealth from './modal-content/profileUnitOfHealth'
 import RegisterUnitOfHealth from './modal-content/registerUnitOfHealth'
 
