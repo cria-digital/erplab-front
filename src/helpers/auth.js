@@ -15,7 +15,7 @@ export async function Login(payload) {
     })
 
     const cookiesData = await cookies()
-    cookiesData.set('token', auth.data.token)
+    cookiesData.set('token', auth.data.access_token)
 
     return {
       success: true,
