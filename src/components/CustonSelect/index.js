@@ -3,7 +3,7 @@ import { Outfit400 } from '@/fonts'
 import { ArrowDown2, ArrowUp2 } from 'iconsax-reactjs'
 import { useEffect, useRef, useState } from 'react'
 
-const SelectUser = ({
+const CustomSelect = ({
   select,
   setSelect,
   options = [],
@@ -34,7 +34,7 @@ const SelectUser = ({
   }, [])
 
   return (
-    <div style={{ position: 'relative', width: '100%' }}>
+    <div style={{ position: 'relative', flex: 1 }}>
       <div
         className="flex h-[40px] items-center justify-between rounded-[8px] border-1 border-[#A9A9A9] px-2"
         onClick={readOnly ? null : () => setMostrarBandeja(true)}
@@ -126,4 +126,4 @@ const SelectUser = ({
   )
 }
 
-export default SelectUser
+export default CustomSelect
