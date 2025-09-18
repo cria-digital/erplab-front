@@ -4,11 +4,10 @@ import { NextResponse } from 'next/server'
 export const TOKEN_KEY = 'token'
 
 export async function middleware(request) {
-  const cookiesStore = await cookies() // ✅
+  const cookiesStore = await cookies()
   const token = cookiesStore.get('token')?.value
 
-  const protectedPaths = ['/units', '/orders', '/users']
-
+  const protectedPaths = ['/configuracoes', '/orders', '/users']
   const pathname = request.nextUrl.pathname
 
   const isProtected = protectedPaths.some((path) => pathname.startsWith(path))
@@ -20,6 +19,9 @@ export async function middleware(request) {
   return NextResponse.next()
 }
 
-export const config = {
-  matcher: ['/units/:path*', '/orders/:path*', '/users/:path*'],
-}
+// ✅ Novo formato
+export const matcher = [
+  '/configuracoes/:path*',
+  '/orders/:path*',
+  '/users/:path*',
+]
