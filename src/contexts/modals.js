@@ -6,12 +6,15 @@ const ModalContext = createContext(undefined)
 
 export function ModalsProvider({ children }) {
   const [modalRegister, setModalRegister] = useState(null)
+  const [modalRegisterUser, setModalRegisterUser] = useState(null)
 
   return (
     <ModalContext.Provider
       value={{
         modalRegister,
         setModalRegister,
+        modalRegisterUser,
+        setModalRegisterUser,
       }}
     >
       {children}

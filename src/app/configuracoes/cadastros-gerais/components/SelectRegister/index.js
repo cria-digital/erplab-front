@@ -14,7 +14,7 @@ import Principais from './components/principais'
 
 const SelectRegister = ({ setOpenModalRegister, selectedCategorie }) => {
   const [category, setCategory] = useState(selectedCategorie)
-  const { setModalRegister } = useModal()
+  const { setModalRegister, setModalRegisterUser } = useModal()
 
   const steps = {
     principais: (
@@ -22,6 +22,10 @@ const SelectRegister = ({ setOpenModalRegister, selectedCategorie }) => {
         setModalRegister={() => {
           setOpenModalRegister(false)
           setModalRegister(true)
+        }}
+        setModalRegisterUser={() => {
+          setOpenModalRegister(false)
+          setModalRegisterUser(true)
         }}
       />
     ),
