@@ -1,4 +1,5 @@
 'use client'
+import CustomSelect from '@/components/CustonSelect'
 import ModalLeft from '@/components/ModalLeft'
 import ModalUp from '@/components/ModalUp'
 import { useModal } from '@/contexts/modals'
@@ -12,15 +13,17 @@ import {
   More,
   Profile2User,
   SearchStatus,
-  TickCircle,
 } from 'iconsax-reactjs'
 import { useEffect, useState } from 'react'
 import { IsActive } from '../../../../components/IsActive'
+import RegisterUser from './modal-content/registerUser'
+
 const Users = () => {
   const [users, setUsers] = useState([])
-  const { modalRegister, setModalRegister } = useModal()
+  const [total, setTotal] = useState(0)
+  const { modalRegisterUser, setModalRegisterUser } = useModal()
   const [openModalProfileuUnit, setOpenModalProfileuUnit] = useState(false)
-  const [selectedUnit, setSelectedUnit] = useState({})
+  // const [selectedUnit, setSelectedUnit] = useState({})
 
   useEffect(() => {
     const findData = async () => {
@@ -29,6 +32,7 @@ const Users = () => {
 
         if (usrs.success) {
           setUsers(usrs.data.data)
+          setTotal(usrs.data.total)
         }
       } catch (error) {
         console.log('erro', error)
@@ -63,7 +67,7 @@ const Users = () => {
               <span
                 className={`${Outfit700.className} text-[16px] text-[#0F9B7F]`}
               >
-                {users.total}
+                {total}
               </span>
               <span className={`${Outfit300.className} text-[#737373]`}>
                 Usuários
@@ -72,13 +76,15 @@ const Users = () => {
           </div>
         </div>
       </div>
-
-      <div className="flex h-[40px] items-center rounded-[8px] border border-[#BBBBBB] px-2">
-        <input
-          placeholder="Pesquisar"
-          className={`h-full w-full rounded-[8px] ${Outfit400.className} bg-[#FFFFFF] text-[16px] outline-0`}
-        />
-        <SearchStatus size="24" color="#A1A1A1" variant="Bulk" />
+      <div className="flex gap-2">
+        <CustomSelect />
+        <div className="flex h-[40px] flex-2 items-center rounded-[8px] border border-[#BBBBBB] px-2">
+          <input
+            placeholder="Pesquisar"
+            className={`h-full w-full rounded-[8px] ${Outfit400.className} bg-[#FFFFFF] text-[16px] outline-0`}
+          />
+          <SearchStatus size="24" color="#A1A1A1" variant="Bulk" />
+        </div>
       </div>
 
       <table className="w-full">
@@ -184,7 +190,7 @@ const Users = () => {
                     className="flex h-full items-center justify-center"
                     onClick={() => {
                       setOpenModalProfileuUnit(true)
-                      setSelectedUnit(item)
+                      // setSelectedUnit(item)
                     }}
                   >
                     <Book size="28" color="#737373" />
@@ -225,9 +231,11 @@ const Users = () => {
         </div>
       </div>
       <ModalUp
-        isOpen={modalRegister}
-        onClose={() => setModalRegister(false)}
-      ></ModalUp>
+        isOpen={modalRegisterUser}
+        onClose={() => setModalRegisterUser(false)}
+      >
+        <RegisterUser onClose={() => setModalRegisterUser(false)} />
+      </ModalUp>
       <ModalLeft
         isOpen={openModalProfileuUnit}
         onClose={() => setOpenModalProfileuUnit(false)}
