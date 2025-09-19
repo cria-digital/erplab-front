@@ -1,4 +1,4 @@
-import CustomSelect from '@/components/CustonSelect'
+import CustomSelect from '@/components/CustomSelect'
 import { Outfit300, Outfit400 } from '@/fonts'
 import { ArrowLeft2, ArrowRight2 } from 'iconsax-reactjs'
 import { useState } from 'react'

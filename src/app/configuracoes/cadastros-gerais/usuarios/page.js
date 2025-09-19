@@ -1,5 +1,5 @@
 'use client'
-import CustomSelect from '@/components/CustonSelect'
+import CustomSelect from '@/components/CustomSelect'
 import ModalLeft from '@/components/ModalLeft'
 import ModalUp from '@/components/ModalUp'
 import { useModal } from '@/contexts/modals'
