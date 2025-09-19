@@ -1,6 +1,8 @@
-import CustomSelect from '@/components/CustonSelect'
+import CustomSearch from '@/components/CustomSearch'
+import CustomSelect from '@/components/CustomSelect'
+import useDebounce from '@/components/useDebounce'
 import { Outfit300, Outfit400, Outfit500 } from '@/fonts'
-import { CreateUnit } from '@/helpers'
+import { CreateUnit, SearchCep, SearchCNAE } from '@/helpers'
 import { Clock, CloseCircle, InfoCircle, Link, Trash } from 'iconsax-reactjs'
 import { useRef, useState } from 'react'
 
@@ -25,9 +27,11 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
     [],
   )
 
-  const [mainCNAE, setMainCNAE] = useState('')
+  const [mainCNAE, setMainCNAE] = useState({})
+  const [mainCNAEs, setMainCNAES] = useState([])
 
-  const [secondaryCNAE, setSecondaryCNAE] = useState('')
+  const [secondaryCNAE, setSecondaryCNAE] = useState({})
+  const [secondaryCNAEs, setSecondaryCNAEs] = useState('')
   const [selectSecondaryCNAE, setSelectSecondaryCNAE] = useState([])
 
   // Endereço
@@ -149,7 +153,7 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
       codigoServicoSecundario: selectSecondaryServiceCode.map((e) => {
         return e.id
       }),
-      cnaePrincipal: mainCNAE?.id,
+      cnaePrincipalId: mainCNAE?.id,
       cep,
       rua: street,
       numero: number,
@@ -199,7 +203,7 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
         }
       }),
       cnaeSecundarios: selectSecondaryCNAE.map((e) => {
-        return e.id
+        return { cnaeId: e.id }
       }),
     }
 
@@ -212,6 +216,54 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
       }
     } catch (error) {
       console.log('erro', error)
+    }
+  }
+
+  const searchCEP = async () => {
+    if (cep.length === 8) {
+      const result = await SearchCep(cep)
+      setStreet(result.data.rua)
+      setDistrict(result.data.bairro)
+      setCity(result.data.cidade)
+      setState(result.data.estado)
+    }
+  }
+
+  const handleChangeMainPrincipalService = (e) => {
+    debounceChangMainCnae(e)
+  }
+
+  const debounceChangMainCnae = useDebounce(handlerMainCnae, 800)
+
+  // Filtra por termo de busca
+  async function handlerMainCnae(props) {
+    try {
+      const result = await SearchCNAE(props)
+
+      if (result.success) {
+        setMainCNAES(result.data)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleChangeSecondaryPrincipalService = (e) => {
+    debounceChangeSecondaryCnae(e)
+  }
+
+  const debounceChangeSecondaryCnae = useDebounce(handlerSecondaryCnae, 800)
+
+  // Filtra por termo de busca
+  async function handlerSecondaryCnae(props) {
+    try {
+      const result = await SearchCNAE(props)
+
+      if (result.success) {
+        setSecondaryCNAEs(result.data)
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -515,16 +567,11 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
                 CNAE pricipal
                 <strong className="text-[#F23434]">*</strong>
               </label>
-              <CustomSelect
-                select={mainCNAE}
+              <CustomSearch
+                onChange={handleChangeMainPrincipalService}
+                placeholder={`Digite o CNAE`}
+                options={mainCNAEs}
                 setSelect={(e) => setMainCNAE(e)}
-                options={[
-                  {
-                    id: '8640-1/02',
-                    label: '8640-1/02 Laboratórios clínicos',
-                  },
-                ]}
-                placeholder={'Selecione o CNAE principal'}
               />
             </div>
             <div className="flex flex-1 flex-col gap-[4px]">
@@ -535,22 +582,11 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
                 <strong className="text-[#F23434]">*</strong>
               </label>
               <div className="flex flex-1 gap-3">
-                <CustomSelect
-                  select={secondaryCNAE}
+                <CustomSearch
+                  onChange={handleChangeSecondaryPrincipalService}
+                  placeholder={`Digite o CNAE`}
+                  options={secondaryCNAEs}
                   setSelect={(e) => setSecondaryCNAE(e)}
-                  options={[
-                    {
-                      id: '8630-5/01',
-                      label:
-                        '8640-1/07 Serviços de diagnostico por imagem sem uso de radiação ionizante, exceto resonância magnética',
-                    },
-                    {
-                      id: '8630-5/01',
-                      label:
-                        '8630-5/01 Atividade médica ambulatorial com recursos para realização de procedimentos cirúgicos',
-                    },
-                  ]}
-                  placeholder={'Selecione o CNAE secundário'}
                 />
                 <button
                   type="button"
@@ -582,7 +618,7 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
                       key={index.toString()}
                       className={`h-[40px] bg-[#E0FFF9] ${Outfit400.className} flex items-center gap-3 rounded-[50px] px-3 text-[14px] text-[#0F9B7F]`}
                     >
-                      {item.label}
+                      {item.codigo} - {item.descricao}
                       <CloseCircle
                         size="22"
                         color="#F23434"
@@ -623,13 +659,14 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
                     <label
                       className={`${Outfit400.className} text-[14px] text-[##222222]`}
                     >
-                      Cep<strong className="text-[#F23434]">*</strong>
+                      CEP<strong className="text-[#F23434]">*</strong>
                     </label>
                     <input
                       value={cep}
                       onChange={(e) => setCep(e.target.value)}
                       className={`${Outfit400.className} ring-none flex h-[40px] items-center justify-center rounded-[8px] border-1 border-[#A9A9A9] px-2 text-[#494949] outline-none`}
                       placeholder="Digite o cep"
+                      onBlur={() => searchCEP()}
                     />
                   </div>
                   <div className="flex flex-1 flex-col gap-[4px]">
@@ -693,15 +730,11 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
                     >
                       Estado
                     </label>
-                    <CustomSelect
-                      select={state}
-                      setSelect={(e) => setState(e)}
-                      options={[
-                        {
-                          id: 'SP',
-                          label: 'SÃO PAULO',
-                        },
-                      ]}
+                    <input
+                      value={state}
+                      onChange={(e) => setState(e.target.value)}
+                      className={`${Outfit400.className} ring-none flex h-[40px] items-center justify-center rounded-[8px] border-1 border-[#A9A9A9] px-2 text-[#494949] outline-none`}
+                      placeholder="Digite o estado"
                     />
                   </div>
                   <div className="flex flex-1 flex-col gap-[4px]">
@@ -710,15 +743,11 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
                     >
                       Cidade<strong className="text-[#F23434]">*</strong>
                     </label>
-                    <CustomSelect
-                      select={city}
-                      setSelect={(e) => setCity(e)}
-                      options={[
-                        {
-                          id: 'SP',
-                          label: 'SÃO PAULO',
-                        },
-                      ]}
+                    <input
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                      className={`${Outfit400.className} ring-none flex h-[40px] items-center justify-center rounded-[8px] border-1 border-[#A9A9A9] px-2 text-[#494949] outline-none`}
+                      placeholder="Digite o estado"
                     />
                   </div>
                 </div>
