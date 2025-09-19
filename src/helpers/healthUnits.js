@@ -39,13 +39,13 @@ export async function CreateUnit(payload) {
 
 export async function listAllUnits() {
   try {
-    // const cookie = await cookies()
-    // const token = cookie.get(TOKEN_KEY)
+    const cookie = await cookies()
+    const token = cookie.get(TOKEN_KEY)
 
     const response = await api.get('/unidades-saude', {
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: token ? 'Bearer ' + token.value : undefined,
+        Authorization: token ? 'Bearer ' + token.value : undefined,
       },
     })
 
