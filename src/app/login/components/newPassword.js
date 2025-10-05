@@ -1,48 +1,79 @@
 'use client'
 import { Outfit300, Outfit400, Outfit700 } from '@/fonts'
+import { ResetPassword } from '@/helpers'
 import { useFormik } from 'formik'
 import { CloseSquare, InfoCircle, Key, TickCircle } from 'iconsax-reactjs'
 import { useState } from 'react'
 import * as Yup from 'yup'
 
-const NewPassword = ({ onClose }) => {
+const NewPassword = ({ onClose, token, nextStep }) => {
   const [loading, setLoading] = useState(false)
   const [isFocusedPassword, setIsFocusedPassword] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-  const SignInSchema = Yup.object().shape({
-    email: Yup.string()
-      .email('Email inválido')
-      .required('O email é obrigatório'),
+  const ForgotPasswordSchema = Yup.object().shape({
+    newPasswordForgot: Yup.string()
+      .required('A senha é obrigatória')
+      .min(8, 'A senha deve ter pelo menos 8 caracteres')
+      .matches(/[A-Z]/, 'A senha deve conter pelo menos uma letra maiúscula')
+      .matches(/[0-9]/, 'A senha deve conter pelo menos um número')
+      .matches(
+        /[^A-Za-z0-9]/,
+        'A senha deve conter pelo menos um caractere especial',
+      ),
+
+    newConfirmPasswordForgot: Yup.string()
+      .required('A confirmação de senha é obrigatória')
+      .oneOf(
+        [Yup.ref('newPasswordForgot'), null],
+        'As senhas devem ser iguais',
+      ),
   })
 
   const formik = useFormik({
-    validationSchema: SignInSchema,
+    //validationSchema: ForgotPasswordSchema,
     validateOnBlur: true,
     validateOnChange: true,
     initialValues: {
-      emailForgotPassword: '',
+      newPasswordForgot: '',
+      newConfirmPasswordForgot: '',
     },
-    onSubmit: async () => {
+    onSubmit: async (values) => {
       setLoading(true)
 
-      // const responseLogin = await Login({
-      //   email: values.email,
-      //   password: values.password,
+      // const responseLogin = await ResetPassword({
+      //   token,
+      //   newPassword: values.newConfirmPasswordForgot,
       // })
 
       // if (responseLogin.success) {
-      //   login(responseLogin.data.access_token)
-      //   defineUser(responseLogin.data.user)
-      //   router.push('/atendimento/pacientes')
+      //   nextStep()
       // }
 
       setLoading(false)
+      nextStep()
     },
   })
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev)
+  }
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword((prev) => !prev)
+  }
+
+  function hasUppercase(str) {
+    return /[A-Z]/.test(str)
+  }
+
+  function hasUppercaseAndNumber(str) {
+    return /[0-9]/.test(str)
+  }
+
+  function hasUppercaseNumberAndSpecial(str) {
+    return /[^A-Za-z0-9]/.test(str) // qualquer coisa que NÃO seja letra ou número
   }
 
   return (
@@ -78,7 +109,7 @@ const NewPassword = ({ onClose }) => {
               <label
                 className={`text-[14px] text-[#383838] ${Outfit400.className}`}
               >
-                Senha
+                Senha<strong className="text-red-500">*</strong>
               </label>
               <div
                 className={`flex h-[40px] w-full flex-row items-center justify-between rounded-[8px] border-[1px] px-3 hover:border hover:border-[#00A59D] ${
@@ -91,10 +122,10 @@ const NewPassword = ({ onClose }) => {
                     color={isFocusedPassword ? '#383838' : '#ABABAB'}
                   />
                   <input
-                    {...formik.getFieldProps('password')}
+                    {...formik.getFieldProps('newPasswordForgot')}
                     type={showPassword ? 'text' : 'password'}
-                    id="password"
-                    name="password"
+                    id="newPasswordForgot"
+                    name="newPasswordForgot"
                     className={`${Outfit400.className} ml-3 w-[200px] text-[16px] outline-none`}
                     placeholder="Digite..."
                     onFocus={() => setIsFocusedPassword(true)}
@@ -116,7 +147,7 @@ const NewPassword = ({ onClose }) => {
               <label
                 className={`text-[14px] text-[#383838] ${Outfit400.className}`}
               >
-                Senha
+                Confirmar nova senha<strong className="text-red-500">*</strong>
               </label>
               <div
                 className={`flex h-[40px] w-full flex-row items-center justify-between rounded-[8px] border-[1px] px-3 hover:border hover:border-[#00A59D] ${
@@ -129,10 +160,10 @@ const NewPassword = ({ onClose }) => {
                     color={isFocusedPassword ? '#383838' : '#ABABAB'}
                   />
                   <input
-                    {...formik.getFieldProps('password')}
-                    type={showPassword ? 'text' : 'password'}
-                    id="password"
-                    name="password"
+                    {...formik.getFieldProps('newConfirmPasswordForgot')}
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    id="newConfirmPasswordForgot"
+                    name="newConfirmPasswordForgot"
                     className={`${Outfit400.className} ml-3 w-[200px] text-[16px] outline-none`}
                     placeholder="Digite..."
                     onFocus={() => setIsFocusedPassword(true)}
@@ -143,10 +174,10 @@ const NewPassword = ({ onClose }) => {
                 <button
                   type="button"
                   className={`text-[16px] text-[#BBBBBB] ${Outfit400.className}`}
-                  onClick={togglePasswordVisibility}
+                  onClick={toggleConfirmPasswordVisibility}
                   disabled={loading}
                 >
-                  {showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                  {showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'}
                 </button>
               </div>
             </div>
@@ -158,33 +189,62 @@ const NewPassword = ({ onClose }) => {
 
             <div className="flex flex-col gap-[4px]">
               <div className="flex items-center gap-2">
-                <InfoCircle size="24" color="#A1A1A1" variant="Bulk" />
+                {formik.values.newConfirmPasswordForgot.length >= 8 ? (
+                  <TickCircle size="24" color="#2CB04B" variant="Bulk" />
+                ) : (
+                  <InfoCircle size="24" color="#A1A1A1" variant="Bulk" />
+                )}
                 <p className={`${Outfit400.className} text-[13px]`}>
-                  Minímo de 8 caracteres
+                  Minímo de <strong>8 caracteres</strong>
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <InfoCircle size="24" color="#A1A1A1" variant="Bulk" />
+                {hasUppercase(formik.values.newConfirmPasswordForgot) ? (
+                  <TickCircle size="24" color="#2CB04B" variant="Bulk" />
+                ) : (
+                  <InfoCircle size="24" color="#A1A1A1" variant="Bulk" />
+                )}
+
                 <p className={`${Outfit400.className} text-[13px]`}>
-                  Mínimo de 1 caractere em letra maiúscula
+                  Mínimo de <strong>1 caractere em letra maiúscula</strong>
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <InfoCircle size="24" color="#A1A1A1" variant="Bulk" />
+                {hasUppercaseAndNumber(
+                  formik.values.newConfirmPasswordForgot,
+                ) ? (
+                  <TickCircle size="24" color="#2CB04B" variant="Bulk" />
+                ) : (
+                  <InfoCircle size="24" color="#A1A1A1" variant="Bulk" />
+                )}
                 <p className={`${Outfit400.className} text-[13px]`}>
-                  Mínimo de 1 caractere numérico
+                  Mínimo de <strong>1 caractere numérico</strong>
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <InfoCircle size="24" color="#A1A1A1" variant="Bulk" />
+                {hasUppercaseNumberAndSpecial(
+                  formik.values.newConfirmPasswordForgot,
+                ) ? (
+                  <TickCircle size="24" color="#2CB04B" variant="Bulk" />
+                ) : (
+                  <InfoCircle size="24" color="#A1A1A1" variant="Bulk" />
+                )}
                 <p className={`${Outfit400.className} text-[13px]`}>
-                  Mínimo de 1 caractere especial (*\-.,@#$%&=+!)
+                  Mínimo de{' '}
+                  <strong>1 caractere especial (*\-.,@#$%&=+!)</strong>
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <InfoCircle size="24" color="#A1A1A1" variant="Bulk" />
+                {formik.values.newConfirmPasswordForgot.length > 1 &&
+                formik.values.newConfirmPasswordForgot ===
+                  formik.values.newPasswordForgot ? (
+                  <TickCircle size="24" color="#2CB04B" variant="Bulk" />
+                ) : (
+                  <InfoCircle size="24" color="#A1A1A1" variant="Bulk" />
+                )}
                 <p className={`${Outfit400.className} text-[13px]`}>
-                  Senha deve ser diferente da senha anterior
+                  <strong>Senha</strong> deve ser <strong>diferente</strong> da
+                  senha anterior
                 </p>
               </div>
             </div>
@@ -192,16 +252,6 @@ const NewPassword = ({ onClose }) => {
         </div>
 
         <div className="flex gap-2">
-          {/* <button
-            className={`h-[44px] w-full rounded-[8px] bg-[#E7E7E7] text-[#3E3E3E] transition duration-300 hover:bg-[#222222] hover:text-[#FFF]`}
-            type="submit"
-            disabled={loading}
-          >
-            <p className={`text-[16px] ${Outfit400.className}`}>
-              REENVIAR LINK
-            </p>
-          </button> */}
-
           <button
             className={`${
               formik.isValid

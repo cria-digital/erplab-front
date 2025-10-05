@@ -1,11 +1,15 @@
 'use client'
 import { Outfit400 } from '@/fonts'
-import { useFormik } from 'formik'
 import { CloseSquare } from 'iconsax-reactjs'
 import { useEffect, useRef, useState } from 'react'
-import * as Yup from 'yup'
 
-const InputCode = ({ onClose, onCodeChange, length = 6 }) => {
+const InputCode = ({
+  onClose,
+  nextStep,
+  setToken,
+  onCodeChange,
+  length = 6,
+}) => {
   const [loading, setLoading] = useState(false)
   const [otp, setOtp] = useState(Array(length).fill(''))
   const inputRefs = useRef([])
@@ -42,42 +46,16 @@ const InputCode = ({ onClose, onCodeChange, length = 6 }) => {
     }
   }
 
-  const SignInSchema = Yup.object().shape({
-    email: Yup.string()
-      .email('Email inválido')
-      .required('O email é obrigatório'),
-  })
-
-  const formik = useFormik({
-    validationSchema: SignInSchema,
-    validateOnBlur: true,
-    validateOnChange: true,
-    initialValues: {
-      emailForgotPassword: '',
-    },
-    onSubmit: async () => {
-      setLoading(true)
-
-      // const responseLogin = await Login({
-      //   email: values.email,
-      //   password: values.password,
-      // })
-
-      // if (responseLogin.success) {
-      //   login(responseLogin.data.access_token)
-      //   defineUser(responseLogin.data.user)
-      //   router.push('/atendimento/pacientes')
-      // }
-
-      setLoading(false)
-    },
-  })
+  const handleCode = async () => {
+    setLoading(true)
+    // await VerifyResetCode(otp)
+    setLoading(false)
+    setToken(otp)
+    nextStep()
+  }
 
   return (
-    <form
-      className="h-[264px] w-[500px] rounded-[12px] bg-white p-[32px]"
-      onSubmit={formik.handleSubmit}
-    >
+    <form className="h-[264px] w-[500px] rounded-[12px] bg-white p-[32px]">
       <div className="flex flex-col gap-[24px]">
         <div className="flex items-center justify-between">
           <span className={`${Outfit400.className}`}>VALIDAR CÓDIGO</span>
@@ -119,6 +97,7 @@ const InputCode = ({ onClose, onCodeChange, length = 6 }) => {
           } self-center rounded-[8px]`}
           type="submit"
           disabled={loading}
+          onClick={() => handleCode()}
         >
           <p className={`text-[16px] ${Outfit400.className}`}>VALIDAR CÓDIGO</p>
         </button>

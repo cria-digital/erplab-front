@@ -1,4 +1,5 @@
 'use client'
+import ModalFramer from '@/components/ModalFramer'
 import { useAuth } from '@/contexts/auth'
 import { Outfit400 } from '@/fonts'
 import { Login } from '@/helpers'
@@ -7,8 +8,7 @@ import { Key, Sms } from 'iconsax-reactjs'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-// import * as Yup from 'yup'
-import ModalFramer from '@/components/ModalFramer'
+import * as Yup from 'yup'
 import Divider from '../../components/Divider'
 
 // forgotPassword
@@ -24,34 +24,36 @@ export default function Page() {
   const [isFocusedPassword, setIsFocusedPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [openModalForgotPassword, setOpenModalForgotPassword] = useState(false)
-  const [step] = useState('sucessForgotPassword')
+  const [emailForgotPassword, setEmailForgotPassword] = useState('')
+  const [token, setToken] = useState('')
+  const [step, setStep] = useState('newPassword')
   const router = useRouter()
 
   const { login, defineUser } = useAuth()
 
-  // const SignInSchema = Yup.object().shape({
-  //   email: Yup.string()
-  //     .email('Email inválido')
-  //     .required('O email é obrigatório'),
-  //   password: Yup.string()
-  //     .min(8, 'A senha deve ter no mínimo 8 caracteres')
-  //     .required('A senha é obrigatória'),
-  // })
+  const SignInSchema = Yup.object().shape({
+    email: Yup.string()
+      .email('Email inválido')
+      .required('O email é obrigatório'),
+    password: Yup.string()
+      .min(8, 'A senha deve ter no mínimo 8 caracteres')
+      .required('A senha é obrigatória'),
+  })
 
   const formik = useFormik({
-    // validationSchema: SignInSchema,
+    validationSchema: SignInSchema,
     validateOnBlur: true,
     validateOnChange: true,
     initialValues: {
-      email: '',
-      password: '',
+      emailLogin: '',
+      passwordLogin: '',
     },
     onSubmit: async (values) => {
       setLoading(true)
 
       const responseLogin = await Login({
-        email: values.email,
-        password: values.password,
+        email: values.emailLogin,
+        password: values.passwordLogin,
       })
 
       if (responseLogin.success) {
@@ -72,21 +74,29 @@ export default function Page() {
     inputEmail: (
       <InputEmail
         onClose={() => setOpenModalForgotPassword(!openModalForgotPassword)}
+        setEmail={(email) => setEmailForgotPassword(email)}
+        nextStep={() => setStep('sucessSendEmail')}
       />
     ),
     sucessSendEmail: (
       <SucessSendEmail
         onClose={() => setOpenModalForgotPassword(!openModalForgotPassword)}
+        emailForgotPassword={emailForgotPassword}
+        nextStep={() => setStep('inputOtpCode')}
       />
     ),
     inputOtpCode: (
       <InputOtpCode
         onClose={() => setOpenModalForgotPassword(!openModalForgotPassword)}
+        setToken={(token) => setToken(token)}
+        nextStep={() => setStep('newPassword')}
       />
     ),
     newPassword: (
       <NewPassword
         onClose={() => setOpenModalForgotPassword(!openModalForgotPassword)}
+        token={token}
+        nextStep={() => setStep('sucessForgotPassword')}
       />
     ),
     sucessForgotPassword: (
@@ -126,10 +136,10 @@ export default function Page() {
               >
                 <Sms size="24" color={isFocusedEmail ? '#383838' : '#ABABAB'} />
                 <input
-                  {...formik.getFieldProps('email')}
+                  {...formik.getFieldProps('emailLogin')}
                   type="email"
-                  id="email"
-                  name="email"
+                  id="emailLogin"
+                  name="emailLogin"
                   className={`${Outfit400.className} ml-3 w-auto text-[16px] outline-none`}
                   placeholder="Digite..."
                   onFocus={() => setIsFocusedEmail(true)}
@@ -155,10 +165,10 @@ export default function Page() {
                     color={isFocusedPassword ? '#383838' : '#ABABAB'}
                   />
                   <input
-                    {...formik.getFieldProps('password')}
+                    {...formik.getFieldProps('passwordLogin')}
                     type={showPassword ? 'text' : 'password'}
-                    id="password"
-                    name="password"
+                    id="passwordLogin"
+                    name="passwordLogin"
                     className={`${Outfit400.className} ml-3 w-[200px] text-[16px] outline-none`}
                     placeholder="Digite..."
                     onFocus={() => setIsFocusedPassword(true)}

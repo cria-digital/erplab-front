@@ -6,7 +6,6 @@ import { redirect } from 'next/navigation'
 import api from './api'
 
 export async function Login(payload) {
-  
   try {
     const auth = await api.post('/auth/login', payload, {
       headers: {
@@ -93,9 +92,9 @@ export async function SendEmailForgotPassword(payload) {
   }
 }
 
-export async function VerifyResetCode(payload) {
+export async function VerifyResetCode(resetCode) {
   try {
-    const code = await api.post('auth/verify-reset-code', payload, {
+    const code = await api.post('/auth/validate-reset-token/' + resetCode, {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',

@@ -1,16 +1,17 @@
 'use client'
 import { Outfit400 } from '@/fonts'
+import { SendEmailForgotPassword } from '@/helpers'
 import { useFormik } from 'formik'
 import { CloseSquare, Sms } from 'iconsax-reactjs'
 import { useState } from 'react'
 import * as Yup from 'yup'
 
-const InputEmail = ({ onClose }) => {
+const InputEmail = ({ onClose, setEmail, nextStep }) => {
   const [isFocusedEmail, setIsFocusedEmail] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const SignInSchema = Yup.object().shape({
-    email: Yup.string()
+    emailForgotPassword: Yup.string()
       .email('Email inválido')
       .required('O email é obrigatório'),
   })
@@ -22,19 +23,17 @@ const InputEmail = ({ onClose }) => {
     initialValues: {
       emailForgotPassword: '',
     },
-    onSubmit: async () => {
+    onSubmit: async (values) => {
       setLoading(true)
 
-      // const responseLogin = await Login({
-      //   email: values.email,
-      //   password: values.password,
-      // })
+      const responseLogin = await SendEmailForgotPassword({
+        email: values.emailForgotPassword,
+      })
 
-      // if (responseLogin.success) {
-      //   login(responseLogin.data.access_token)
-      //   defineUser(responseLogin.data.user)
-      //   router.push('/atendimento/pacientes')
-      // }
+      if (responseLogin.success) {
+        setEmail(values.emailForgotPassword)
+        nextStep()
+      }
 
       setLoading(false)
     },
