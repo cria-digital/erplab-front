@@ -1,5 +1,6 @@
 'use client'
 import { Outfit400 } from '@/fonts'
+import { VerifyResetCode } from '@/helpers'
 import { CloseSquare } from 'iconsax-reactjs'
 import { useEffect, useRef, useState } from 'react'
 
@@ -48,10 +49,12 @@ const InputCode = ({
 
   const handleCode = async () => {
     setLoading(true)
-    // await VerifyResetCode(otp)
+    const verifyCode = await VerifyResetCode(otp.join(''))
+    if (verifyCode.success) {
+      setToken(otp.join(''))
+      nextStep()
+    }
     setLoading(false)
-    setToken(otp)
-    nextStep()
   }
 
   return (

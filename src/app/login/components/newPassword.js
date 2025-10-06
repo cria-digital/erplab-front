@@ -32,7 +32,7 @@ const NewPassword = ({ onClose, token, nextStep }) => {
   })
 
   const formik = useFormik({
-    //validationSchema: ForgotPasswordSchema,
+    validationSchema: ForgotPasswordSchema,
     validateOnBlur: true,
     validateOnChange: true,
     initialValues: {
@@ -42,17 +42,16 @@ const NewPassword = ({ onClose, token, nextStep }) => {
     onSubmit: async (values) => {
       setLoading(true)
 
-      // const responseLogin = await ResetPassword({
-      //   token,
-      //   newPassword: values.newConfirmPasswordForgot,
-      // })
+      const responseLogin = await ResetPassword({
+        token,
+        newPassword: values.newConfirmPasswordForgot,
+      })
 
-      // if (responseLogin.success) {
-      //   nextStep()
-      // }
+      if (responseLogin.success) {
+        nextStep()
+      }
 
       setLoading(false)
-      nextStep()
     },
   })
 

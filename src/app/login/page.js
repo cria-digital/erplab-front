@@ -26,16 +26,16 @@ export default function Page() {
   const [openModalForgotPassword, setOpenModalForgotPassword] = useState(false)
   const [emailForgotPassword, setEmailForgotPassword] = useState('')
   const [token, setToken] = useState('')
-  const [step, setStep] = useState('newPassword')
+  const [step, setStep] = useState('inputEmail')
   const router = useRouter()
 
   const { login, defineUser } = useAuth()
 
   const SignInSchema = Yup.object().shape({
-    email: Yup.string()
+    emailLogin: Yup.string()
       .email('Email inválido')
       .required('O email é obrigatório'),
-    password: Yup.string()
+    passwordLogin: Yup.string()
       .min(8, 'A senha deve ter no mínimo 8 caracteres')
       .required('A senha é obrigatória'),
   })
@@ -66,6 +66,7 @@ export default function Page() {
     },
   })
 
+
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev)
   }
@@ -73,35 +74,50 @@ export default function Page() {
   const stepsForgotPassword = {
     inputEmail: (
       <InputEmail
-        onClose={() => setOpenModalForgotPassword(!openModalForgotPassword)}
+        onClose={() => {
+          setOpenModalForgotPassword(!openModalForgotPassword)
+          setStep('inputEmail')
+        }}
         setEmail={(email) => setEmailForgotPassword(email)}
         nextStep={() => setStep('sucessSendEmail')}
       />
     ),
     sucessSendEmail: (
       <SucessSendEmail
-        onClose={() => setOpenModalForgotPassword(!openModalForgotPassword)}
+        onClose={() => {
+          setOpenModalForgotPassword(!openModalForgotPassword)
+          setStep('inputEmail')
+        }}
         emailForgotPassword={emailForgotPassword}
         nextStep={() => setStep('inputOtpCode')}
       />
     ),
     inputOtpCode: (
       <InputOtpCode
-        onClose={() => setOpenModalForgotPassword(!openModalForgotPassword)}
+        onClose={() => {
+          setOpenModalForgotPassword(!openModalForgotPassword)
+          setStep('inputEmail')
+        }}
         setToken={(token) => setToken(token)}
         nextStep={() => setStep('newPassword')}
       />
     ),
     newPassword: (
       <NewPassword
-        onClose={() => setOpenModalForgotPassword(!openModalForgotPassword)}
+        onClose={() => {
+          setOpenModalForgotPassword(!openModalForgotPassword)
+          setStep('inputEmail')
+        }}
         token={token}
         nextStep={() => setStep('sucessForgotPassword')}
       />
     ),
     sucessForgotPassword: (
       <SucessForgotPassword
-        onClose={() => setOpenModalForgotPassword(!openModalForgotPassword)}
+        onClose={() => {
+          setOpenModalForgotPassword(!openModalForgotPassword)
+          setStep('inputEmail')
+        }}
       />
     ),
   }

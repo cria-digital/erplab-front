@@ -94,7 +94,7 @@ export async function SendEmailForgotPassword(payload) {
 
 export async function VerifyResetCode(resetCode) {
   try {
-    const code = await api.post('/auth/validate-reset-token/' + resetCode, {
+    const code = await api.get('/auth/validate-reset-token/' + resetCode, {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
