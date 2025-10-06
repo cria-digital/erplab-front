@@ -22,7 +22,7 @@ const InformacoesGerais = () => {
   const [retainIR, setRetainIR] = useState(false)
 
   return (
-    <div className="flex h-[504px] flex-col gap-[32px] rounded bg-[#FFF] p-[48px]">
+    <div className="flex h-[504px] w-full flex-col gap-[32px] rounded bg-[#FFF] p-[48px]">
       <div className="flex flex-col gap-[16px]">
         <span className={`${Outfit400.className} text-[16px] text-[#0F9B7F]`}>
           Informações básicas

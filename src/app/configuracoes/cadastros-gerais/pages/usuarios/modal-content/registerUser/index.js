@@ -53,8 +53,8 @@ const RegisterUser = ({ onClose }) => {
         </div>
       </div>
 
-      <div className="flex h-full w-screen overflow-x-auto">
-        <div className="m-[48px] flex w-full flex-col rounded">
+      <div className="flex h-full w-screen gap-x-3 overflow-x-auto">
+        <div className="mx-[48px] my-[28px] flex h-fit flex-1 flex-col rounded">
           <div className="flex h-[56px] items-center gap-8 px-[48px]">
             <button
               type="button"
