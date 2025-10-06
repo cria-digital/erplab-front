@@ -66,7 +66,6 @@ export default function Page() {
     },
   })
 
-
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev)
   }

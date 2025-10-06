@@ -12,13 +12,17 @@ import {
 
 import { Outfit400 } from '@/fonts'
 
-const Principais = ({ setModalRegister, setModalRegisterUser }) => {
+const Principais = ({
+  setModalRegisterUnits,
+  setModalRegisterExams,
+  setModalRegisterUser,
+}) => {
   return (
     <div className="flex flex-col gap-[8px]">
       <div className="flex gap-[8px]">
         <div
           className="flex h-[84px] flex-1 flex-col justify-between rounded-[8px] bg-[#F9F9F9] p-[12px] hover:bg-[#E0FFF9]"
-          onClick={() => setModalRegister()}
+          onClick={() => setModalRegisterUnits(true)}
         >
           <Buildings size="28" color="#737373" variant="TwoTone" />
           <span className={`${Outfit400.className} text-[16px] text-[#494949]`}>
@@ -27,7 +31,7 @@ const Principais = ({ setModalRegister, setModalRegisterUser }) => {
         </div>
         <div
           className="flex h-[84px] flex-1 flex-col justify-between rounded-[8px] bg-[#F9F9F9] p-[12px] hover:bg-[#E0FFF9]"
-          onClick={() => setModalRegister()}
+          onClick={() => setModalRegisterExams(true)}
         >
           <Heart size="28" color="#737373" variant="TwoTone" />
           <span className={`${Outfit400.className} text-[16px] text-[#494949]`}>

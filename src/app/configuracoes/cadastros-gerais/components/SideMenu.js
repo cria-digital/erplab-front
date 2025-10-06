@@ -1,17 +1,14 @@
 'use client'
 import { Outfit400 } from '@/fonts'
 import { ArrowDown2, ArrowUp2 } from 'iconsax-reactjs'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
-const SideMenu = () => {
+const SideMenu = ({ page, setPage }) => {
   const [openMenuPrincipais, setOpenMenuPrincipais] = useState(true)
   const [openMenuEstrutura, setOpenMenuEstrutura] = useState(true)
   const [openMenuDocumentacao, setOpenMenuDocumentacao] = useState(true)
   const [openMenuFiananceiro, setOpenMenuFiananceiro] = useState(true)
   const [openMenuOutros, setOpenMenuOutros] = useState(true)
-  const pathname = usePathname()
 
   return (
     <div className="w-[281px] rounded-[8px] bg-[#F9F9F9] p-[16px]">
@@ -35,30 +32,30 @@ const SideMenu = () => {
       </div>
       {openMenuPrincipais && (
         <div className="mt-[8px] flex flex-col gap-[4px]">
-          <Link
-            href="/configuracoes/cadastros-gerais/unidades-de-saude"
+          <button
+            onClick={() => setPage('unidades-de-saude')}
             className={`flex h-[40px] items-center rounded-[4px] px-[8px] ${
-              pathname === '/configuracoes/cadastros-gerais/unidades-de-saude'
+              page === 'unidades-de-saude'
                 ? 'bg-[#0F9B7F] text-white'
                 : 'text-[#8A8A8A] hover:bg-[#0F9B7F] hover:text-white'
             }`}
           >
             <span className={`${Outfit400.className} `}>Unidades de Saúde</span>
-          </Link>
-          <Link
-            href="/configuracoes/cadastros-gerais/exames"
+          </button>
+          <button
+            onClick={() => setPage('exames')}
             className={`flex h-[40px] items-center rounded-[4px] px-[8px] ${
-              pathname === '/configuracoes/cadastros-gerais/exames'
+              page === 'exames'
                 ? 'bg-[#0F9B7F] text-white'
                 : 'text-[#8A8A8A] hover:bg-[#0F9B7F] hover:text-white'
             }`}
           >
             <span className={`${Outfit400.className} `}>Exames</span>
-          </Link>
-          <Link
-            href="/configuracoes/cadastros-gerais/matriz-de-exames"
+          </button>
+          <button
+            onClick={() => setPage('matriz-de-exames')}
             className={`flex h-[40px] items-center rounded-[4px] px-[8px] ${
-              pathname === '/configuracoes/cadastros-gerais/matriz-de-exames'
+              page === 'matriz-de-exames'
                 ? 'bg-[#0F9B7F] text-white'
                 : 'text-[#8A8A8A] hover:bg-[#0F9B7F] hover:text-white'
             }`}
@@ -66,67 +63,67 @@ const SideMenu = () => {
             <span className={`${Outfit400.className} `}>
               Matrizes de exames
             </span>
-          </Link>
-          <Link
-            href="/configuracoes/cadastros-gerais/profissionais"
+          </button>
+          <button
+            onClick={() => setPage('profissionais')}
             className={`flex h-[40px] items-center rounded-[4px] px-[8px] ${
-              pathname === '/configuracoes/cadastros-gerais/profissionais'
+              page === 'profissionais'
                 ? 'bg-[#0F9B7F] text-white'
                 : 'text-[#8A8A8A] hover:bg-[#0F9B7F] hover:text-white'
             }`}
           >
             <span className={`${Outfit400.className} `}>Profissionais</span>
-          </Link>
-          <Link
-            href="/configuracoes/cadastros-gerais/usuarios"
+          </button>
+          <button
+            onClick={() => setPage('usuarios')}
             className={`flex h-[40px] items-center rounded-[4px] px-[8px] ${
-              pathname === '/configuracoes/cadastros-gerais/usuarios'
+              page === 'usuarios'
                 ? 'bg-[#0F9B7F] text-white'
                 : 'text-[#8A8A8A] hover:bg-[#0F9B7F] hover:text-white'
             }`}
           >
             <span className={`${Outfit400.className} `}>Usuários</span>
-          </Link>
-          <Link
-            href="/configuracoes/cadastros-gerais/agendas"
+          </button>
+          <button
+            onClick={() => setPage('agendas')}
             className={`flex h-[40px] items-center rounded-[4px] px-[8px] ${
-              pathname === '/configuracoes/cadastros-gerais/agendas'
+              page === 'agendas'
                 ? 'bg-[#0F9B7F] text-white'
                 : 'text-[#8A8A8A] hover:bg-[#0F9B7F] hover:text-white'
             }`}
           >
             <span className={`${Outfit400.className} `}>Agendas</span>
-          </Link>
-          <Link
-            href="/configuracoes/cadastros-gerais/metodos"
+          </button>
+          <button
+            onClick={() => setPage('metodos')}
             className={`flex h-[40px] items-center rounded-[4px] px-[8px] ${
-              pathname === '/configuracoes/cadastros-gerais/metodos'
+              page === 'metodos'
                 ? 'bg-[#0F9B7F] text-white'
                 : 'text-[#8A8A8A] hover:bg-[#0F9B7F] hover:text-white'
             }`}
           >
             <span className={`${Outfit400.className} `}>Metodos</span>
-          </Link>
-          <Link
-            href="/configuracoes/cadastros-gerais/amostras"
+          </button>
+          <button
+            onClick={() => setPage('amostras')}
             className={`flex h-[40px] items-center rounded-[4px] px-[8px] ${
-              pathname === '/configuracoes/cadastros-gerais/amostras'
+              page === 'amostras'
                 ? 'bg-[#0F9B7F] text-white'
                 : 'text-[#8A8A8A] hover:bg-[#0F9B7F] hover:text-white'
             }`}
           >
             <span className={`${Outfit400.className} `}>Amostras</span>
-          </Link>
-          <Link
-            href="/configuracoes/cadastros-gerais/kits"
+          </button>
+          <button
+            onClick={() => setPage('kits')}
             className={`flex h-[40px] items-center rounded-[4px] px-[8px] ${
-              pathname === '/configuracoes/cadastros-gerais/kits'
+              page === 'kits'
                 ? 'bg-[#0F9B7F] text-white'
                 : 'text-[#8A8A8A] hover:bg-[#0F9B7F] hover:text-white'
             }`}
           >
             <span className={`${Outfit400.className} `}>Kits</span>
-          </Link>
+          </button>
         </div>
       )}
 
