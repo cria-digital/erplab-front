@@ -17,6 +17,7 @@ const Principais = ({
   setModalRegisterExams,
   setModalRegisterUser,
   setModalRegisterMethods,
+  setModalRegisterExamMatrix,
 }) => {
   return (
     <div className="flex flex-col gap-[8px]">
@@ -39,7 +40,10 @@ const Principais = ({
             Exames
           </span>
         </div>
-        <div className="flex h-[84px] flex-1 flex-col justify-between rounded-[8px] bg-[#F9F9F9] p-[12px] hover:bg-[#E0FFF9]">
+        <div
+          className="flex h-[84px] flex-1 flex-col justify-between rounded-[8px] bg-[#F9F9F9] p-[12px] hover:bg-[#E0FFF9]"
+          onClick={() => setModalRegisterExamMatrix(true)}
+        >
           <Grid1 size="28" color="#737373" variant="TwoTone" />
           <span className={`${Outfit400.className} text-[16px] text-[#494949]`}>
             Matrizes

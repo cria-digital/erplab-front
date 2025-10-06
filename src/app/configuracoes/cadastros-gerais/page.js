@@ -10,6 +10,7 @@ import SideMenu from './components/SideMenu'
 
 // components de cadastro
 import Exams from './pages/exames'
+import ExamMatrix from './pages/matrizes-de-exames'
 import Methods from './pages/metodos'
 import UnitOfHealth from './pages/unidades-de-saude'
 import Users from './pages/usuarios'
@@ -23,9 +24,10 @@ const RootLayout = () => {
   const [selectedCategorie, setSelectCategorie] = useState(null)
   const [page, setPage] = useState('unidades-de-saude')
 
-  // Modal Unidades de Saúde
+  // Modal Pricipais
   const [openModalRegisteUnits, setModalRegisterUnits] = useState(false)
   const [openModalRegisterExams, setModalRegisterExams] = useState(false)
+  const [modalRegisterExamMatrix, setModalRegisterExamMatrix] = useState(false)
   const [modalRegisterUser, setModalRegisterUser] = useState(false)
   const [modalRegisterMethods, setModalRegisterMethods] = useState(false)
 
@@ -55,6 +57,12 @@ const RootLayout = () => {
       <Methods
         modalRegisterMethods={modalRegisterMethods}
         setModalRegisterMethods={(e) => setModalRegisterMethods(e)}
+      />
+    ),
+    'matriz-de-exames': (
+      <ExamMatrix
+        modalRegisterExamMatrix={modalRegisterExamMatrix}
+        setModalRegisterExamMatrix={(e) => setModalRegisterExamMatrix(e)}
       />
     ),
     bancos: (
@@ -128,6 +136,10 @@ const RootLayout = () => {
             modalRegisterBanks={() => {
               setOpenModalRegister(false)
               setModalRegisterBanks(true)
+            }}
+            setModalRegisterExamMatrix={(e) => {
+              setOpenModalRegister(false)
+              setModalRegisterExamMatrix(e)
             }}
             setOpenModalRegister={() =>
               setOpenModalRegister(!openModalRegister)
