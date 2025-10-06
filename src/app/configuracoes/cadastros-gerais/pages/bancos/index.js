@@ -5,9 +5,9 @@ import { Outfit300, Outfit400, Outfit700 } from '@/fonts'
 import {
   ArrowLeft2,
   ArrowRight2,
+  Bank,
   Book,
   Edit2,
-  Heart,
   More,
   SearchStatus,
   TickCircle,
@@ -28,16 +28,16 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
         <div className="mx-[10px] flex h-[64px] w-full items-center rounded-[8px] bg-white">
           <div className="flex gap-3 rounded-[8px] px-[8px]">
             <div className="flex h-[48px] w-[48px] items-center justify-center rounded-[8px] bg-[#F9F9F9]">
-              <Heart size="28" color="#A1A1A1" />
+              <Bank size="28" color="#A1A1A1" />
             </div>
             <div className="flex flex-col justify-around">
               <span
                 className={`${Outfit700.className} text-[16px] text-[#0F9B7F]`}
               >
-                160
+                10
               </span>
               <span className={`${Outfit300.className} text-[#737373]`}>
-                Exames
+                Bancos
               </span>
             </div>
           </div>
@@ -65,16 +65,6 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
           placeholder={'Tipos de exames: todos'}
           className={'bg-[#F9F9F9]'}
         />
-        <CustomSelect
-          select={{ id: 1, label: 'Especialidade: todos' }}
-          setSelect={() => null}
-          options={[
-            { id: 1, label: 'Especialidade: todos' },
-            { id: 2, label: '2' },
-          ]}
-          placeholder={'Tipos de exames: todos'}
-          className={'bg-[#F9F9F9]'}
-        />
         <div className="flex h-[40px] flex-2 items-center rounded-[8px] border border-[#BBBBBB] px-2">
           <input
             placeholder="Pesquisar"
@@ -95,32 +85,27 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
             <th
               className={`text-[13px] ${Outfit400.className} text-start text-[#717171]`}
             >
-              Nome da unidade
+              Banco
             </th>
             <th
               className={`text-[13px] ${Outfit400.className} text-start text-[#717171]`}
             >
-              CNPJ
+              Descrição
             </th>
             <th
               className={`text-[13px] ${Outfit400.className} text-start text-[#717171]`}
             >
-              Responsável
+              Unidade associada
             </th>
             <th
               className={`text-[13px] ${Outfit400.className} text-start text-[#717171]`}
             >
-              Cidade
+              Status
             </th>
             <th
               className={`text-[13px] ${Outfit400.className} text-start text-[#717171]`}
             >
-              Ativo
-            </th>
-            <th
-              className={`text-[13px] ${Outfit400.className} text-center text-[#717171]`}
-            >
-              Certificado
+              Excluir
             </th>
             <th
               className={`text-[13px] ${Outfit400.className} text-center text-[#717171]`}
@@ -131,11 +116,6 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
               className={`text-[13px] ${Outfit400.className} text-center text-[#717171]`}
             >
               Visualizar
-            </th>
-            <th
-              className={`text-[13px] ${Outfit400.className} text-center text-[#717171]`}
-            >
-              Opçoes
             </th>
           </tr>
         </thead>
