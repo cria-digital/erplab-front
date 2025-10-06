@@ -15,6 +15,7 @@ const SelectRegister = ({
   setModalRegisterUnits,
   setModalRegisterExams,
   setModalRegisterUser,
+  setModalRegisterMethods,
   setOpenModalRegister,
   selectedCategorie,
 }) => {
@@ -31,6 +32,9 @@ const SelectRegister = ({
         }}
         setModalRegisterUser={() => {
           setModalRegisterUser(true)
+        }}
+        setModalRegisterMethods={() => {
+          setModalRegisterMethods(true)
         }}
       />
     ),
