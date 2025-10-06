@@ -216,9 +216,16 @@ const SideMenu = ({ page, setPage }) => {
       </div>
       {openMenuFiananceiro && (
         <div className="mt-[8px] flex flex-col gap-[4px]">
-          <div className="flex h-[40px] items-center rounded-[4px] px-[8px] text-[#8A8A8A] hover:bg-[#0F9B7F] hover:text-white">
+          <button
+            onClick={() => setPage('bancos')}
+            className={`flex h-[40px] items-center rounded-[4px] px-[8px] ${
+              page === 'bancos'
+                ? 'bg-[#0F9B7F] text-white'
+                : 'text-[#8A8A8A] hover:bg-[#0F9B7F] hover:text-white'
+            }`}
+          >
             <span className={`${Outfit400.className} `}>Bancos</span>
-          </div>
+          </button>
           <div className="flex h-[40px] items-center rounded-[4px] px-[8px] text-[#8A8A8A] hover:bg-[#0F9B7F] hover:text-white">
             <span className={`${Outfit400.className} `}>Adquirentes</span>
           </div>

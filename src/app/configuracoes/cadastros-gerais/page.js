@@ -9,11 +9,13 @@ import SelectRegister from './components/SelectRegister'
 import SideMenu from './components/SideMenu'
 
 // components de cadastro
-
 import Exams from './pages/exames'
 import Methods from './pages/metodos'
 import UnitOfHealth from './pages/unidades-de-saude'
 import Users from './pages/usuarios'
+
+// Financeiro
+import Banks from './pages/bancos'
 
 const RootLayout = () => {
   const [openModalCategorie, setOpenModalCategorie] = useState(false)
@@ -26,6 +28,9 @@ const RootLayout = () => {
   const [openModalRegisterExams, setModalRegisterExams] = useState(false)
   const [modalRegisterUser, setModalRegisterUser] = useState(false)
   const [modalRegisterMethods, setModalRegisterMethods] = useState(false)
+
+  // Modal Financeiro
+  const [modalRegisterBanks, setModalRegisterBanks] = useState(false)
 
   const pages = {
     'unidades-de-saude': (
@@ -50,6 +55,12 @@ const RootLayout = () => {
       <Methods
         modalRegisterMethods={modalRegisterMethods}
         setModalRegisterMethods={(e) => setModalRegisterMethods(e)}
+      />
+    ),
+    bancos: (
+      <Banks
+        modalRegisterBanks={modalRegisterBanks}
+        setModalRegisterBanks={(e) => setModalRegisterBanks(e)}
       />
     ),
   }
@@ -113,6 +124,10 @@ const RootLayout = () => {
             setModalRegisterMethods={() => {
               setOpenModalRegister(false)
               setModalRegisterMethods(true)
+            }}
+            modalRegisterBanks={() => {
+              setOpenModalRegister(false)
+              setModalRegisterBanks(true)
             }}
             setOpenModalRegister={() =>
               setOpenModalRegister(!openModalRegister)
