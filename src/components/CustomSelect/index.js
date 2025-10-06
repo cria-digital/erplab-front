@@ -8,6 +8,7 @@ const CustomSelect = ({
   setSelect,
   options = [],
   placeholder = '',
+  className,
   readOnly = false,
 }) => {
   const [mostrarBandeja, setMostrarBandeja] = useState(false)
@@ -36,7 +37,7 @@ const CustomSelect = ({
   return (
     <div style={{ position: 'relative', flex: 1 }}>
       <div
-        className="flex h-[40px] items-center justify-between rounded-[8px] border-1 border-[#A9A9A9] px-2"
+        className={`flex h-[40px] items-center justify-between rounded-[8px] px-2 ${className}`}
         onClick={readOnly ? null : () => setMostrarBandeja(true)}
         ref={inputRef}
       >
