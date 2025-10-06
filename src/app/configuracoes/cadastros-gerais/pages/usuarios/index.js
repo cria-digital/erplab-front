@@ -2,7 +2,6 @@
 import CustomSelect from '@/components/CustomSelect'
 import ModalLeft from '@/components/ModalLeft'
 import ModalUp from '@/components/ModalUp'
-import { useModal } from '@/contexts/modals'
 import { Outfit300, Outfit400, Outfit700 } from '@/fonts'
 import { listAllUsers } from '@/helpers'
 import {
@@ -15,13 +14,12 @@ import {
   SearchStatus,
 } from 'iconsax-reactjs'
 import { useEffect, useState } from 'react'
-import { IsActive } from '../../../../components/IsActive'
+import { IsActive } from '../../../../../components/IsActive'
 import RegisterUser from './modal-content/registerUser'
 
-const Users = () => {
+const Users = ({ modalRegisterUser, setModalRegisterUser }) => {
   const [users, setUsers] = useState([])
   const [total, setTotal] = useState(0)
-  const { modalRegisterUser, setModalRegisterUser } = useModal()
   const [openModalProfileuUnit, setOpenModalProfileuUnit] = useState(false)
   // const [selectedUnit, setSelectedUnit] = useState({})
 

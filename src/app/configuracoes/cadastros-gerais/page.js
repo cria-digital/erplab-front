@@ -9,8 +9,10 @@ import SelectRegister from './components/SelectRegister'
 import SideMenu from './components/SideMenu'
 
 // components de cadastro
-import Exams from './pages/exames/page'
+
 import UnitOfHealth from './pages/unidades-de-saude'
+import Exams from './pages/exames/page'
+import Users from './pages/usuarios'
 
 const RootLayout = () => {
   const [openModalCategorie, setOpenModalCategorie] = useState(false)
@@ -21,6 +23,7 @@ const RootLayout = () => {
   // Modal Unidades de Saúde
   const [openModalRegisteUnits, setModalRegisterUnits] = useState(false)
   const [openModalRegisterExams, setModalRegisterExams] = useState(false)
+  const [modalRegisterUser, setModalRegisterUser] = useState(false)
 
   const pages = {
     'unidades-de-saude': (
@@ -33,6 +36,12 @@ const RootLayout = () => {
       <Exams
         openModalRegisterExams={openModalRegisterExams}
         setModalRegisterExams={(e) => setModalRegisterExams(e)}
+      />
+    ),
+    usuarios: (
+      <Users
+        modalRegisterUser={modalRegisterUser}
+        setModalRegisterUser={(e) => setModalRegisterUser(e)}
       />
     ),
   }
@@ -88,6 +97,10 @@ const RootLayout = () => {
             setModalRegisterExams={() => {
               setOpenModalRegister(false)
               setModalRegisterExams(true)
+            }}
+            setModalRegisterUser={() => {
+              setOpenModalRegister(false)
+              setModalRegisterUser(true)
             }}
             setOpenModalRegister={() =>
               setOpenModalRegister(!openModalRegister)

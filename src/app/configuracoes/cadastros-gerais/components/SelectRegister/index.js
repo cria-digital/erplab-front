@@ -14,6 +14,7 @@ import Principais from './components/principais'
 const SelectRegister = ({
   setModalRegisterUnits,
   setModalRegisterExams,
+  setModalRegisterUser,
   setOpenModalRegister,
   selectedCategorie,
 }) => {
@@ -27,6 +28,9 @@ const SelectRegister = ({
         }}
         setModalRegisterExams={() => {
           setModalRegisterExams(true)
+        }}
+        setModalRegisterUser={() => {
+          setModalRegisterUser(true)
         }}
       />
     ),
