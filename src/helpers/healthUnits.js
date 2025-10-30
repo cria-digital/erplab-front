@@ -87,17 +87,21 @@ export async function listAllUnits(page = '', term = '', limit = '') {
   }
 }
 
-export async function UpdateUnit(payload) {
+export async function UpdateUnit(unitId, payload) {
   try {
-    // const cookie = await cookies()
-    // const token = cookie.get(TOKEN_KEY)
+    const cookie = await cookies()
+    const token = cookie.get(TOKEN_KEY)
 
-    const response = await api.patch('/unity/' + payload.id, payload, {
-      headers: {
-        'Content-Type': 'application/json',
-        // Authorization: 'Bearer ' + token.value,
+    const response = await api.patch(
+      '/cadastros/unidades-saude/' + unitId,
+      payload,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token.value,
+        },
       },
-    })
+    )
 
     return {
       success: true,
