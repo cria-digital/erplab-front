@@ -338,10 +338,8 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
     setSelectSecondaryServiceCode([])
     setSearchTermCNAEPrincipal('')
     setMainCNAE({})
-    setMainCNAES([])
     setSearchTermCNAESecondary('')
     setSecondaryCNAE({})
-    setSecondaryCNAEs('')
     setSelectSecondaryCNAE([])
     setCep('')
     setStreet('')
@@ -444,9 +442,9 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
           <button
             type="button"
             onClick={() => handleSubmit()}
-            className="flex h-[44px] items-center justify-evenly rounded-[8px] bg-[#A9A9A9] px-4 hover:bg-[#E0FFF9]"
+            className="flex h-[44px] items-center justify-evenly rounded-[8px] bg-[#A9A9A9] px-4 text-[#494949] hover:bg-[#0F9B7F] hover:text-[#fff]"
           >
-            <span className={`${Outfit400.className} text-[#494949] uppercase`}>
+            <span className={`${Outfit400.className} uppercase`}>
               {loading ? 'Finalizando' : 'Finalizar'}
             </span>
           </button>
@@ -1053,11 +1051,13 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
                               handleChange(index, 'of', e.target.value)
                             }
                             type="time"
-                            className={`${Outfit400.className} w-[60px] outline-0`}
+                            className={`${Outfit400.className} w-[60px] text-[#222222] outline-0`}
                           />
                           <Clock size="28" color="#A1A1A1" />
                         </div>
-                        <span className={`${Outfit400.className}`}>às</span>
+                        <span className={`${Outfit400.className} text-[#222]`}>
+                          às
+                        </span>
                         <div className="flex h-[40px] w-[100px] items-center gap-2 rounded-[8px] border border-[#A1A1A1] px-2">
                           <input
                             value={openingHours[index].until}
@@ -1089,12 +1089,14 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
                               handleChange(index, 'interval', e.target.value)
                             }
                             type="time"
-                            className={`${Outfit400.className} w-[60px] outline-0`}
+                            className={`${Outfit400.className} w-[60px] text-[#222222] outline-0`}
                             disabled={openingHours[index].enabled}
                           />
                           <Clock size="28" color="#A1A1A1" />
                         </div>
-                        <span className={`${Outfit400.className}`}>às</span>
+                        <span className={`${Outfit400.className} text-[#222]`}>
+                          às
+                        </span>
                         <div
                           className={`flex h-[40px] w-[100px] items-center gap-2 rounded-[8px] ${openingHours[index].enabled ? 'border border-dashed' : 'border'} border-[#A1A1A1] px-2`}
                         >
@@ -1108,7 +1110,7 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
                               )
                             }
                             type="time"
-                            className={`${Outfit400.className} w-[60px] outline-0`}
+                            className={`${Outfit400.className} w-[60px] text-[#222222] outline-0`}
                             disabled={openingHours[index].enabled}
                           />
                           <Clock size="28" color="#A1A1A1" />
@@ -1124,9 +1126,11 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
                                 handleChange(index, 'interval', '')
                               }
                             }}
-                            className={`${Outfit400.className} outline-0`}
+                            className={`${Outfit400.className} text-[#222222] outline-0`}
                           />
-                          <span className={`${Outfit300.className}`}>
+                          <span
+                            className={`${Outfit300.className} text-[#222]`}
+                          >
                             Sem intervalo
                           </span>
                         </div>
@@ -1556,7 +1560,7 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
                       <strong className="text-[#F23434]">*</strong>
                     </label>
                     <input
-                      value={item.agency}
+                      value={item.agencia}
                       onChange={(e) =>
                         handleChangeFinancial(index, 'agencia', e.target.value)
                       }
@@ -1573,7 +1577,7 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
                       <strong className="text-[#F23434]">*</strong>
                     </label>
                     <input
-                      value={item.agency}
+                      value={item.digitoAgencia}
                       onChange={(e) =>
                         handleChangeFinancial(
                           index,
@@ -1594,7 +1598,7 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
                       <strong className="text-[#F23434]">*</strong>
                     </label>
                     <input
-                      value={item.cc}
+                      value={item.contaCorrente}
                       onChange={(e) =>
                         handleChangeFinancial(
                           index,
@@ -1615,7 +1619,7 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
                       <strong className="text-[#F23434]">*</strong>
                     </label>
                     <input
-                      value={item.agency}
+                      value={item.digitoConta}
                       onChange={(e) =>
                         handleChangeFinancial(
                           index,

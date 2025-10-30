@@ -186,3 +186,107 @@ export async function LinkUser(unityId, payload) {
     }
   }
 }
+
+export async function ActiveUnit(unitId) {
+  try {
+    const cookie = await cookies()
+    const token = cookie.get(TOKEN_KEY)
+
+    const response = await api.patch(
+      '/cadastros/unidades-saude/' + unitId + '/ativar',
+      {},
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token.value,
+        },
+      },
+    )
+
+    return {
+      success: true,
+      data: response.data,
+    }
+  } catch (error) {
+    const fallback = {
+      message: 'Erro desconhecido ao tentar criar unidade',
+      statusCode: 500,
+      error: 'UnknownError',
+    }
+
+    const errData = error?.response?.data || fallback
+
+    return {
+      success: false,
+      error: errData,
+    }
+  }
+}
+
+export async function InactiveUnit(unitId) {
+  try {
+    const cookie = await cookies()
+    const token = cookie.get(TOKEN_KEY)
+
+    const response = await api.patch(
+      '/cadastros/unidades-saude/' + unitId + '/desativar',
+      {},
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token.value,
+        },
+      },
+    )
+
+    return {
+      success: true,
+      data: response.data,
+    }
+  } catch (error) {
+    const fallback = {
+      message: 'Erro desconhecido ao tentar criar unidade',
+      statusCode: 500,
+      error: 'UnknownError',
+    }
+
+    const errData = error?.response?.data || fallback
+
+    return {
+      success: false,
+      error: errData,
+    }
+  }
+}
+
+export async function DeleteUnit(payload) {
+  try {
+    const cookie = await cookies()
+    const token = cookie.get(TOKEN_KEY)
+
+    const response = await api.delete('/cadastros/unidades-saude/' + payload, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token.value,
+      },
+    })
+
+    return {
+      success: true,
+      data: response.data,
+    }
+  } catch (error) {
+    const fallback = {
+      message: 'Erro desconhecido ao tentar deletar unidade',
+      statusCode: 500,
+      error: 'UnknownError',
+    }
+
+    const errData = error?.response?.data || fallback
+
+    return {
+      success: false,
+      error: errData,
+    }
+  }
+}
