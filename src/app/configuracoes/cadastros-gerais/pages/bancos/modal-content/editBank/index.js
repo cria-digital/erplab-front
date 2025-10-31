@@ -1,16 +1,25 @@
 import { Outfit400, Outfit500 } from '@/fonts'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 import InformacoesGerais from './components/informacoesgerais'
 import Integracao from './components/integracao'
 
-const RegisterUser = ({ onClose }) => {
+const EditUser = ({ onClose, account }) => {
   const [tab, setTab] = useState('informacoesGerais')
+  const childFormAccountRef = useRef()
 
-  const handleSubmit = async () => {}
+  const handleSubmit = async () => {
+    childFormAccountRef.current.submitForm()
+  }
 
   const steps = {
-    informacoesGerais: <InformacoesGerais />,
+    informacoesGerais: (
+      <InformacoesGerais
+        account={account}
+        onClose={onClose}
+        ref={childFormAccountRef}
+      />
+    ),
     integracao: <Integracao />,
   }
 
@@ -76,4 +85,4 @@ const RegisterUser = ({ onClose }) => {
   )
 }
 
-export default RegisterUser
+export default EditUser
