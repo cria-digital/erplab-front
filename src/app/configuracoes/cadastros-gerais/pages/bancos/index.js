@@ -2,17 +2,11 @@
 import CustomSelect from '@/components/CustomSelect'
 import ModalLeft from '@/components/ModalLeft'
 import ModalUp from '@/components/ModalUp'
+import Pagination from '@/components/Pagination'
 import { Outfit300, Outfit400, Outfit700 } from '@/fonts'
 import { DeleteAccountBank, listBankAccount } from '@/helpers'
-import {
-  ArrowLeft2,
-  ArrowRight2,
-  Bank,
-  Book,
-  Edit2,
-  SearchStatus,
-  Trash,
-} from 'iconsax-reactjs'
+import useDebounce from '@/hooks/useDebounce'
+import { Bank, Book, Edit2, SearchStatus, Trash } from 'iconsax-reactjs'
 import { useEffect, useState } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
 import { Status } from './components/status'
@@ -27,6 +21,15 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
 
   const [banks, setBanks] = useState([])
   const [total, setTotal] = useState(0)
+
+  // focus
+  const [isFocusedSearch, setIsFocusedSearch] = useState(false)
+
+  // filters
+  const [currentPage, setCurrentPage] = useState(1)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [status, setStatus] = useState({ id: '', label: 'Status: Todos' })
+  const [type, setType] = useState({ id: '', label: 'Tipos: Todas' })
 
   // modal
   const [modalEditBank, setModalEditBank] = useState(false)
@@ -50,6 +53,103 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
   const fetchBanks = async () => {
     try {
       const response = await listBankAccount()
+      setBanks(response.data.data)
+      setTotal(response.data.meta.total)
+    } catch (error) {
+      console.error('Error fetching banks:', error)
+    }
+  }
+
+  // Filtrar por paginação
+  const findDataPerPage = async (props) => {
+    setCurrentPage(props)
+
+    try {
+      const response = await listBankAccount(
+        searchTerm,
+        type,
+        status,
+        props,
+        10,
+      )
+      setBanks(response.data.data)
+      setTotal(response.data.meta.total)
+    } catch (error) {
+      console.error('Error fetching banks:', error)
+    }
+  }
+
+  // Filtrar por paginação
+  const findDataPerStatus = async (props) => {
+    setCurrentPage(1)
+    const sts = {
+      Todos: { id: '', label: 'Status: Todos' },
+      Ativas: { id: 'ativas', label: 'Status: Ativas' },
+      Inativas: { id: 'inativas', label: 'Status: Inativas' },
+    }
+
+    setStatus(sts[props.label])
+
+    try {
+      const response = await listBankAccount(
+        searchTerm,
+        type,
+        props.id,
+        currentPage,
+        10,
+      )
+      setBanks(response.data.data)
+      setTotal(response.data.meta.total)
+    } catch (error) {
+      console.error('Error fetching banks:', error)
+    }
+  }
+
+  const findDataPerType = async (props) => {
+    setCurrentPage(1)
+
+    const typ = {
+      Todas: { id: '', label: 'Tipo: Todas' },
+      Corrente: { id: 'corrente', label: 'Tipo: Corrente' },
+      Poupança: { id: 'poupanca', label: 'Tipo: Poupança' },
+    }
+
+    setType(typ[props.label])
+
+    try {
+      const response = await listBankAccount(
+        searchTerm,
+        props.id,
+        status,
+        currentPage,
+        10,
+      )
+      setBanks(response.data.data)
+      setTotal(response.data.meta.total)
+    } catch (error) {
+      console.error('Error fetching banks:', error)
+    }
+  }
+
+  // Filtrar por termo pesquisado
+  const handleChangeUnit = (e) => {
+    setSearchTerm(e.target.value)
+    debounceChange(e.target.value)
+  }
+
+  const debounceChange = useDebounce(handler, 800)
+
+  async function handler(props) {
+    setCurrentPage(1)
+
+    try {
+      const response = await listBankAccount(
+        props,
+        type,
+        status,
+        currentPage,
+        10,
+      )
       setBanks(response.data.data)
       setTotal(response.data.meta.total)
     } catch (error) {
@@ -92,29 +192,40 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
 
       <div className="flex gap-2">
         <CustomSelect
-          select={{ id: 1, label: 'Status: Todos' }}
-          setSelect={() => null}
+          select={status}
+          setSelect={(e) => findDataPerStatus(e)}
           options={[
-            { id: 1, label: 'Status: Todos' },
-            { id: 2, label: '2' },
+            { id: '', label: 'Todos' },
+            { id: 'ativas', label: 'Ativas' },
+            { id: 'inativas', label: 'Inativas' },
           ]}
           placeholder={'Status'}
           className={'bg-[#F9F9F9]'}
         />
         <CustomSelect
-          select={{ id: 1, label: 'Tipos: todos' }}
-          setSelect={() => null}
+          select={type}
+          setSelect={(e) => findDataPerType(e)}
           options={[
-            { id: 1, label: 'Tipos de exames: todos' },
-            { id: 2, label: '2' },
+            { id: '', label: 'Todas' },
+            { id: 'corrente', label: 'Corrente' },
+            { id: 'poupanca', label: 'Poupança' },
           ]}
           placeholder={'Tipos de exames: todos'}
           className={'bg-[#F9F9F9]'}
         />
-        <div className="flex h-[40px] flex-2 items-center rounded-[8px] border border-[#BBBBBB] px-2">
+        <div
+          className={`flex h-[40px] flex-3 items-center rounded-[8px] px-2 ${
+            isFocusedSearch
+              ? 'border-[1px] border-[#0F9B7F]'
+              : 'border border-[#BBBBBB]'
+          }`}
+        >
           <input
             placeholder="Pesquisar"
+            onChange={handleChangeUnit}
             className={`h-full w-full rounded-[8px] ${Outfit400.className} bg-[#FFFFFF] text-[16px] text-[#222] outline-0`}
+            onFocus={() => setIsFocusedSearch(true)}
+            onBlur={() => setIsFocusedSearch(false)}
           />
           <SearchStatus size="24" color="#A1A1A1" variant="Bulk" />
         </div>
@@ -190,8 +301,12 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
                 <td
                   className={`text-[14px] ${Outfit300.className} text-[#383838]`}
                 >
-                  {item.unidade_saude?.nomeUnidade}
+                  {item.unidades_vinculadas
+                    ?.map((u) => u?.unidade_saude?.nomeUnidade)
+                    .filter(Boolean)
+                    .join(', ') || '—'}
                 </td>
+
                 <td
                   className={`text-[14px] ${Outfit300.className} text-[#383838]`}
                 >
@@ -248,34 +363,35 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
             <span
               className={`${Outfit400.className} pl-2 text-[16px] text-[#222]`}
             >
-              01
+              {banks.length > 10 ? 10 : banks.length}
             </span>
           </div>
           <span className={`${Outfit300.className} text-[16px] text-[#222]`}>
-            de 01 registros
+            de {total} registros
           </span>
         </div>
 
-        <div className="flex items-center">
-          <ArrowLeft2 size="28" color="#D9D9D9" />
-          <div className="flex h-[40px] items-center justify-center rounded-[8px] bg-[#E0FFF9]">
-            <span className={`${Outfit400.className} flex px-4 text-[#0F9B7F]`}>
-              01
-            </span>
-          </div>
-          <ArrowRight2 size="28" color="#D9D9D9" />
-        </div>
+        <Pagination
+          totalRecords={total}
+          recordsPerPage={10}
+          onPageChange={(value) => findDataPerPage(value)}
+          currentPage={currentPage} // Pass the current page state
+        />
       </div>
       <ModalUp
         isOpen={modalRegisterBanks}
         onClose={() => setModalRegisterBanks(false)}
       >
-        <RegisterBank onClose={() => setModalRegisterBanks(false)} />
+        <RegisterBank
+          onClose={() => setModalRegisterBanks(false)}
+          findData={() => fetchBanks()}
+        />
       </ModalUp>
       <ModalUp isOpen={modalEditBank} onClose={() => setModalEditBank(false)}>
         <EditBank
           onClose={() => setModalEditBank(false)}
           account={selectedAccount}
+          findData={() => fetchBanks()}
         />
       </ModalUp>
       <ModalLeft

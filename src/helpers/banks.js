@@ -37,12 +37,43 @@ export async function listAllActiveBanks() {
   }
 }
 
-export async function listBankAccount() {
+export async function listBankAccount(
+  term = '',
+  type = '',
+  status = '',
+  page = '',
+  limit = '',
+) {
   try {
     const cookie = await cookies()
     const token = cookie.get(TOKEN_KEY)
 
-    const response = await api.get('/financeiro/contas-bancarias', {
+    // 1. Crie uma nova instância de URLSearchParams
+    const params = new URLSearchParams()
+
+    if (term !== '') {
+      params.append('search', term)
+    }
+    if (type !== '') {
+      params.append('tipo', type)
+    }
+    if (status !== '') {
+      params.append('status', status)
+    }
+    if (page !== '') {
+      params.append('page', page)
+    }
+    if (limit !== '') {
+      params.append('limit', limit)
+    }
+
+    // 3. Concatene a query string à base da URL
+    const queryString = params.toString() // Gera 'param1=value1&param2=value2'
+    const url = `/financeiro/contas-bancarias${queryString ? '?' + queryString : ''}` // Adiciona '?' apenas se houver query string
+
+    console.log(url)
+
+    const response = await api.get(url, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: token ? 'Bearer ' + token.value : undefined,
@@ -69,12 +100,12 @@ export async function listBankAccount() {
   }
 }
 
-export async function CreateExam(payload) {
+export async function CreateBankAccount(payload) {
   try {
     const cookie = await cookies()
     const token = cookie.get(TOKEN_KEY)
 
-    const response = await api.post('/exames/exames', payload, {
+    const response = await api.post('/financeiro/contas-bancarias', payload, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token.value,

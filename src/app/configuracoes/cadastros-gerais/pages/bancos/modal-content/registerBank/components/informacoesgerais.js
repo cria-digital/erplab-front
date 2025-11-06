@@ -3,47 +3,8 @@ import Divider from '@/components/Divider'
 import { Outfit300, Outfit400 } from '@/fonts'
 import { FieldArray, getIn } from 'formik'
 import { CloseCircle, InfoCircle } from 'iconsax-reactjs'
-import { useEffect, useState } from 'react'
 
-import { listAllActiveBanks, listAllUnits } from '@/helpers'
-
-const InformacoesGerais = ({ formik }) => {
-  const [activeBanks, setActiveBanks] = useState([])
-  const [units, setUnits] = useState([])
-
-  useEffect(() => {
-    const findUsersByFilters = async () => {
-      try {
-        const [allBanks, unts] = await Promise.all([
-          listAllActiveBanks(),
-          listAllUnits(),
-        ])
-
-        const banks = allBanks.data.map((item) => {
-          return {
-            id: item.id,
-            label: `${item.codigo} - ${item.nome}`,
-          }
-        })
-
-        const unt = unts.data.data.map((item) => {
-          return {
-            id: item.id,
-            label: `${item.nomeUnidade}`,
-            item,
-          }
-        })
-
-        setActiveBanks(banks)
-        setUnits(unt)
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
-    findUsersByFilters()
-  }, [])
-
+const InformacoesGerais = ({ formik, activeBanks, units }) => {
   const p = (i, field) => `informations.${i}.${field}`
 
   return (
