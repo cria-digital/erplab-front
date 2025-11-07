@@ -16,8 +16,9 @@ const SelectRegister = ({
   setModalRegisterExams,
   setModalRegisterUser,
   setModalRegisterMethods,
-  modalRegisterBanks,
   setModalRegisterExamMatrix,
+  setModalRegisterBanks,
+  setModalFormFiels,
   setOpenModalRegister,
   selectedCategorie,
 }) => {
@@ -48,12 +49,12 @@ const SelectRegister = ({
     documentacao: <Documentacao />,
     financeiro: (
       <Financeiro
-        modalRegisterBanks={() => {
-          modalRegisterBanks(true)
+        setModalRegisterBanks={() => {
+          setModalRegisterBanks(true)
         }}
       />
     ),
-    outros: <Outros />,
+    outros: <Outros setModalFormFiels={() => setModalFormFiels(true)} />,
   }
 
   return (
