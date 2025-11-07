@@ -79,13 +79,13 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
     }
   }
 
-  // Filtrar por paginação
+  // Filtrar por status
   const findDataPerStatus = async (props) => {
     setCurrentPage(1)
     const sts = {
       Todos: { id: '', label: 'Status: Todos' },
-      Ativas: { id: 'ativas', label: 'Status: Ativas' },
-      Inativas: { id: 'inativas', label: 'Status: Inativas' },
+      Ativas: { id: 'ativa', label: 'Status: Ativas' },
+      Inativas: { id: 'inativa', label: 'Status: Inativas' },
     }
 
     setStatus(sts[props.label])
@@ -93,7 +93,7 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
     try {
       const response = await listBankAccount(
         searchTerm,
-        type,
+        type.id,
         props.id,
         currentPage,
         10,
@@ -105,6 +105,7 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
     }
   }
 
+  // filtrar por tipo
   const findDataPerType = async (props) => {
     setCurrentPage(1)
 
@@ -120,7 +121,7 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
       const response = await listBankAccount(
         searchTerm,
         props.id,
-        status,
+        status.id,
         currentPage,
         10,
       )
@@ -145,8 +146,8 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
     try {
       const response = await listBankAccount(
         props,
-        type,
-        status,
+        type.id,
+        status.id,
         currentPage,
         10,
       )
@@ -196,8 +197,8 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
           setSelect={(e) => findDataPerStatus(e)}
           options={[
             { id: '', label: 'Todos' },
-            { id: 'ativas', label: 'Ativas' },
-            { id: 'inativas', label: 'Inativas' },
+            { id: 'ativa', label: 'Ativas' },
+            { id: 'inativa', label: 'Inativas' },
           ]}
           placeholder={'Status'}
           className={'bg-[#F9F9F9]'}
