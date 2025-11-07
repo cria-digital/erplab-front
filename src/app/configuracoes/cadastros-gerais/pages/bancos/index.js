@@ -67,8 +67,8 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
     try {
       const response = await listBankAccount(
         searchTerm,
-        type,
-        status,
+        type.id,
+        status.id,
         props,
         10,
       )
@@ -238,7 +238,7 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
             <th
               className={`text-[13px] ${Outfit400.className} text-center text-[#717171]`}
             >
-              Codigo interno
+              Codigo do banco
             </th>
             <th
               className={`text-[13px] ${Outfit400.className} text-start text-[#717171]`}
@@ -287,7 +287,7 @@ const Bancos = ({ modalRegisterBanks, setModalRegisterBanks }) => {
                 <td
                   className={`text-[14px] ${Outfit300.className} text-center text-[#383838]`}
                 >
-                  {item?.codigo_interno}
+                  {item?.banco.codigo}
                 </td>
                 <td
                   className={`text-[14px] ${Outfit300.className} text-start text-[#383838]`}
