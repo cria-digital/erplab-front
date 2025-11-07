@@ -8,15 +8,41 @@ import SelectCategory from './components/SelectCategory'
 import SelectRegister from './components/SelectRegister'
 import SideMenu from './components/SideMenu'
 
-// components de cadastro
+// principais
+import Agendas from './pages/agendas'
+import Amostras from './pages/amostras'
 import Exams from './pages/exames'
+import Kits from './pages/kits'
 import ExamMatrix from './pages/matrizes-de-exames'
 import Methods from './pages/metodos'
+import Profissionais from './pages/profissionais/page'
 import UnitOfHealth from './pages/unidades-de-saude'
 import Users from './pages/usuarios'
 
+// Empresas
+import Convenios from './pages/convenios'
+import Fornecedores from './pages/fornecedores'
+import LaboratorioDeApoio from './pages/laboratorioDeApoio'
+import PrestadoresDeServico from './pages/prestadoresDeServico'
+import TabelaDePrecos from './pages/tabelaDePrecos'
+import Telemedicina from './pages/telemedicina'
+
+// Estrutura
+import EquipamentosImobilizados from './pages/equipamentosImobilizados'
+import EtiquetaParaAmostra from './pages/etiquetasParaAmostra'
+import SalasSetores from './pages/salasSetores'
+
 // Financeiro
 import Banks from './pages/bancos'
+
+// Outros
+import Adquirentes from './pages/adquirentes'
+import CabecalhoRodapes from './pages/cabecalhoRodapes'
+import CamposDeFormulario from './pages/campos-de-formulario'
+import FormularioDeAtendimento from './pages/formularioDeAtendimento'
+import HierarquiaCFO from './pages/hierarquiaCFO'
+import ImportacaoDeTabelas from './pages/importacaoDeTabelas'
+import Integracoes from './pages/integracoes'
 
 const RootLayout = () => {
   const [openModalCategorie, setOpenModalCategorie] = useState(false)
@@ -34,6 +60,9 @@ const RootLayout = () => {
   // Modal Financeiro
   const [modalRegisterBanks, setModalRegisterBanks] = useState(false)
 
+  // Modal outros
+  const [openModalFormFiels, setOpenModalFormFiels] = useState(false)
+
   const pages = {
     'unidades-de-saude': (
       <UnitOfHealth
@@ -47,28 +76,54 @@ const RootLayout = () => {
         setModalRegisterExams={(e) => setModalRegisterExams(e)}
       />
     ),
-    usuarios: (
-      <Users
-        modalRegisterUser={modalRegisterUser}
-        setModalRegisterUser={(e) => setModalRegisterUser(e)}
-      />
-    ),
-    metodos: (
-      <Methods
-        modalRegisterMethods={modalRegisterMethods}
-        setModalRegisterMethods={(e) => setModalRegisterMethods(e)}
-      />
-    ),
     'matriz-de-exames': (
       <ExamMatrix
         modalRegisterExamMatrix={modalRegisterExamMatrix}
         setModalRegisterExamMatrix={(e) => setModalRegisterExamMatrix(e)}
       />
     ),
+    profissionais: <Profissionais />,
+    usuarios: (
+      <Users
+        modalRegisterUser={modalRegisterUser}
+        setModalRegisterUser={(e) => setModalRegisterUser(e)}
+      />
+    ),
+    agendas: <Agendas />,
+    metodos: (
+      <Methods
+        modalRegisterMethods={modalRegisterMethods}
+        setModalRegisterMethods={(e) => setModalRegisterMethods(e)}
+      />
+    ),
+    amostras: <Amostras />,
+    kits: <Kits />,
+    convenios: <Convenios />,
+    laboratorioDeApoio: <LaboratorioDeApoio />,
+
+    telemedicina: <Telemedicina />,
+    fornecedores: <Fornecedores />,
+    prestadoresDeServico: <PrestadoresDeServico />,
+    tabelaDePrecos: <TabelaDePrecos />,
+    salasSetores: <SalasSetores />,
+    equipamentosImobilizados: <EquipamentosImobilizados />,
+    etiquetasParaAmostras: <EtiquetaParaAmostra />,
+    cabecalhoRodapes: <CabecalhoRodapes />,
+    formulariosDeAtendimento: <FormularioDeAtendimento />,
     bancos: (
       <Banks
         modalRegisterBanks={modalRegisterBanks}
         setModalRegisterBanks={(e) => setModalRegisterBanks(e)}
+      />
+    ),
+    adquirentes: <Adquirentes />,
+    hieraquiaCFO: <HierarquiaCFO />,
+    importacaoDeTabelas: <ImportacaoDeTabelas />,
+    integracoes: <Integracoes />,
+    'campos-de-fomulario': (
+      <CamposDeFormulario
+        modalRegisterFormField={openModalFormFiels}
+        setModalRegisterFormField={(e) => setOpenModalFormFiels(e)}
       />
     ),
   }
@@ -142,10 +197,15 @@ const RootLayout = () => {
               setOpenModalRegister(false)
               setModalRegisterExamMatrix(e)
             }}
-            modalRegisterBanks={() => {
+            setModalRegisterBanks={() => {
               setPage('bancos')
               setOpenModalRegister(false)
               setModalRegisterBanks(true)
+            }}
+            setModalFormFiels={() => {
+              setPage('campos-de-fomulario')
+              setOpenModalRegister(false)
+              setOpenModalFormFiels(true)
             }}
             setOpenModalRegister={() =>
               setOpenModalRegister(!openModalRegister)
