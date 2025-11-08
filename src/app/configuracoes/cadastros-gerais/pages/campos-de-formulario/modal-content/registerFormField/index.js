@@ -1,20 +1,18 @@
 import CustomSelect from '@/components/CustomSelect'
 import { Outfit300, Outfit400, Outfit500 } from '@/fonts'
+import { CreateAlternative, UpdateField } from '@/helpers'
 import { FormikProvider, useFormik } from 'formik'
 import { Trash } from 'iconsax-reactjs'
-import { useState } from 'react'
-import { ToastContainer } from 'react-toastify'
-import { validationSchemaAccountBank } from './components/schema'
+import { toast, ToastContainer } from 'react-toastify'
+import { validationSchemaFormField } from './components/schema'
 
-const RegisterFormField = ({ onClose }) => {
-  const [activeBanks] = useState([])
-
+const RegisterFormField = ({ onClose, fields, findData }) => {
   const formik = useFormik({
-    validationSchema: validationSchemaAccountBank,
+    validationSchema: validationSchemaFormField,
     validateOnBlur: false,
     validateOnChange: true,
     initialValues: {
-      campo: '',
+      campo: {},
       description: '',
       options: [
         {
@@ -23,10 +21,89 @@ const RegisterFormField = ({ onClose }) => {
         },
       ],
     },
-    onSubmit: async (values) => {
-      console.log(values)
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        await UpdateField(values.campo.id, {
+          descricao: values.description,
+        })
+
+        const items = values.options.map(toApiItem)
+
+        const results = await Promise.allSettled(
+          items.map((payload) => CreateAlternative(values.campo.id, payload)),
+        )
+
+        // caso tudo ok, você pode limpar/fechar/atualizar
+        const allOk = results.every((r) => r.status === 'fulfilled')
+        if (allOk) {
+          // resetar o form se quiser:
+          formik.resetForm()
+          findData()
+          onClose()
+        }
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setSubmitting(false)
+      }
     },
   })
+
+  const toApiItem = (it, index) => ({
+    textoAlternativa: it.name,
+    ordem: index,
+    ativo: it.status === 'active',
+  })
+
+  // helpers
+  const touchAll = (obj) => {
+    if (Array.isArray(obj)) return obj.map(touchAll)
+    if (obj && typeof obj === 'object') {
+      return Object.fromEntries(
+        Object.keys(obj).map((k) => [k, touchAll(obj[k])]),
+      )
+    }
+    return true
+  }
+
+  const flattenErrors = (errs, out = []) => {
+    if (!errs) return out
+    if (typeof errs === 'string') {
+      out.push(errs)
+      return out
+    }
+    if (Array.isArray(errs)) errs.forEach((e) => flattenErrors(e, out))
+    else if (typeof errs === 'object')
+      Object.values(errs).forEach((v) => flattenErrors(v, out))
+    return out
+  }
+
+  // no componente:
+  const handleFinalize = async () => {
+    // dispara validação do Formik/Yup
+    const errors = await formik.validateForm()
+
+    if (Object.keys(errors).length > 0) {
+      // marca tudo como touched pra exibir erros inline (se quiser)
+      formik.setTouched(touchAll(formik.values), true)
+
+      // agrega mensagens únicas pro toast
+      const messages = Array.from(new Set(flattenErrors(errors)))
+      const body = messages.join('\n')
+
+      toast.error(body, {
+        position: 'top-right',
+        autoClose: 6000,
+        closeOnClick: true,
+      })
+      return
+    }
+
+    // se estiver válido, submete
+    formik.handleSubmit()
+  }
+
+  console.log(formik.errors)
 
   return (
     <FormikProvider value={formik}>
@@ -61,7 +138,7 @@ const RegisterFormField = ({ onClose }) => {
             </button>
             <button
               type="button"
-              // onClick={handleFinalize}
+              onClick={handleFinalize}
               className={`flex h-[44px] w-[108px] items-center justify-evenly rounded-[8px] ${
                 formik.isValid
                   ? 'bg-[#0F9B7F] text-white hover:from-[#3BC1E2] hover:to-[#1D6F87]'
@@ -96,9 +173,12 @@ const RegisterFormField = ({ onClose }) => {
                             <strong className="text-[#F23434]">*</strong>
                           </label>
                           <CustomSelect
-                            select={{}}
-                            setSelect={() => {}}
-                            options={activeBanks}
+                            select={formik.values.campo}
+                            setSelect={(option) => {
+                              formik.setFieldValue(`campo`, option)
+                              formik.setFieldTouched(`campo`, true, false)
+                            }}
+                            options={fields}
                             placeholder="Selecione um campo"
                             className="border border-[#BBBBBB]"
                           />
@@ -115,7 +195,7 @@ const RegisterFormField = ({ onClose }) => {
                             value={formik.values.description ?? ''}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            className={`${Outfit400.className} ring-none flex h-[40px] items-center justify-center rounded-[8px] border-1 border-[#A9A9A9] px-2 text-[#494949] outline-none`}
+                            className={`${Outfit400.className} ring-none flex h-[40px] items-center justify-center rounded-[8px] border-1 border-[#A9A9A9] px-2 text-[#494949] outline-none hover:border-[#0F9B7F] focus:border-[#0F9B7F]`}
                             placeholder="Digite uma descrição"
                           />
                         </div>
@@ -162,12 +242,22 @@ const RegisterFormField = ({ onClose }) => {
                               className={`text-[14px] ${Outfit300.className} text-center text-[#383838]`}
                             >
                               <input
-                                // name={`informations.${index}.agencia`}
-                                // value={formik.values.informations[index]?.agencia ?? ''}
-                                onChange={formik.handleChange}
+                                name={`alternativas.${index}.name`}
+                                value={formik.values.options[index]?.name ?? ''}
+                                onChange={(e) => {
+                                  formik.setFieldValue(
+                                    `options.${index}.name`,
+                                    e.target.value,
+                                  )
+                                  formik.setFieldTouched(
+                                    `options.${index}.name`,
+                                    true,
+                                    false,
+                                  )
+                                }}
                                 onBlur={formik.handleBlur}
                                 className={`${Outfit400.className} ring-none flex h-[40px] w-full items-center justify-center rounded-[8px] border-1 border-[#A9A9A9] px-2 text-[#494949] outline-none`}
-                                placeholder="Digite uma descrição"
+                                placeholder="Digite o nome da alternativa"
                                 inputMode="numeric"
                               />
                             </td>
@@ -251,24 +341,7 @@ const RegisterFormField = ({ onClose }) => {
                       })}
                     </tbody>
                   </table>
-                  <div className="flex h-[40px] items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-[40px] w-[61px] items-center rounded-[8px] bg-[#F9F9F9]">
-                        <span
-                          className={`${Outfit400.className} pl-2 text-[16px] text-[#222]`}
-                        >
-                          {formik.values.options.length > 10
-                            ? 10
-                            : formik.values.options.length}
-                        </span>
-                      </div>
-                      <span
-                        className={`${Outfit300.className} text-[16px] text-[#222]`}
-                      >
-                        de {formik.values.options.length} registros
-                      </span>
-                    </div>
-
+                  <div className="flex h-[40px] items-center justify-end">
                     <button
                       type="button"
                       className={`${Outfit400.className} h-[40px] rounded-[8px] border border-[#0F9B7F] px-2 text-[16px] text-[#0F9B7F] uppercase`}
@@ -283,13 +356,6 @@ const RegisterFormField = ({ onClose }) => {
                     >
                       Adicionar alternativa
                     </button>
-
-                    {/* <Pagination
-                      totalRecords={formik.values.options}
-                      recordsPerPage={10}
-                      // onPageChange={(value) => findDataPerPage(value)}
-                      // currentPage={currentPage} // Pass the current page state
-                    /> */}
                   </div>
                 </div>
               </div>
