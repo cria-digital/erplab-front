@@ -25,7 +25,7 @@ const ExamMatrix = ({
   const [setSelectedUnit] = useState({})
 
   return (
-    <div className="flex w-full flex-col gap-[32px]">
+    <div className="flex flex-1 flex-col gap-[32px]">
       <div className="flex h-[84px] items-center justify-between rounded-[16px] bg-[#F9F9F9]">
         <div className="mx-[10px] flex h-[64px] w-full items-center rounded-[8px] bg-white">
           <div className="flex gap-3 rounded-[8px] px-[8px]">
