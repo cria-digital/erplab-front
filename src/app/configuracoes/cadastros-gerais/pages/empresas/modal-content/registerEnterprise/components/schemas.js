@@ -11,11 +11,12 @@ const cnpjRegex = /^\d{14}$/ // 14 dígitos
 const phoneOpt = Yup.string()
   .transform(trimToUndefined)
   .nullable()
-  .test('digits', 'Telefone inválido', (value) => {
-    if (!value) return true
-    const d = value.replace(/\D+/g, '')
-    // aceita fixo (10 dígitos) ou celular (11 dígitos)
-    return d.length === 10 || d.length === 11
+  .test('phone-mask', 'Telefone inválido', (value) => {
+    if (!value) return true // opcional
+
+    const maskRegex = /^\(\d{2}\)\s?\d{4,5}-\d{4}$/
+
+    return maskRegex.test(value)
   })
 
 const emailOpt = Yup.string()
