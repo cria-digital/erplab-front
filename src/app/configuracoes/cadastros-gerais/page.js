@@ -20,12 +20,8 @@ import UnitOfHealth from './pages/unidades-de-saude'
 import Users from './pages/usuarios'
 
 // Empresas
-import Convenios from './pages/convenios'
-import Fornecedores from './pages/fornecedores'
-import LaboratorioDeApoio from './pages/laboratorioDeApoio'
-import PrestadoresDeServico from './pages/prestadoresDeServico'
+import Empresas from './pages/empresas'
 import TabelaDePrecos from './pages/tabelaDePrecos'
-import Telemedicina from './pages/telemedicina'
 
 // Estrutura
 import EquipamentosImobilizados from './pages/equipamentosImobilizados'
@@ -57,11 +53,23 @@ const RootLayout = () => {
   const [modalRegisterUser, setModalRegisterUser] = useState(false)
   const [modalRegisterMethods, setModalRegisterMethods] = useState(false)
 
+  // Modal Emporesas
+  const [openModalRegisterCompanies, setModalRegisterCompanies] =
+    useState(false)
+
   // Modal Financeiro
   const [modalRegisterBanks, setModalRegisterBanks] = useState(false)
 
   // Modal outros
   const [openModalFormFiels, setOpenModalFormFiels] = useState(false)
+
+  const ALLOWED_PAGES = [
+    'convenios',
+    'laboratorioDeApoio',
+    'telemedicina',
+    'fornecedores',
+    'prestadoresDeServico',
+  ]
 
   const pages = {
     'unidades-de-saude': (
@@ -98,12 +106,6 @@ const RootLayout = () => {
     ),
     amostras: <Amostras />,
     kits: <Kits />,
-    convenios: <Convenios />,
-    laboratorioDeApoio: <LaboratorioDeApoio />,
-
-    telemedicina: <Telemedicina />,
-    fornecedores: <Fornecedores />,
-    prestadoresDeServico: <PrestadoresDeServico />,
     tabelaDePrecos: <TabelaDePrecos />,
     salasSetores: <SalasSetores />,
     equipamentosImobilizados: <EquipamentosImobilizados />,
@@ -147,9 +149,17 @@ const RootLayout = () => {
           </span>
         </button>
       </div>
-      <div className="mx-[32px] my-[16px] flex gap-3">
+      <div className="flex w-full flex-1 gap-3 px-[32px] py-[16px]">
         <SideMenu page={page} setPage={(a) => setPage(a)} />
         {pages[page]}
+        {ALLOWED_PAGES.includes(page) && (
+          <Empresas
+            openModalRegisterCompanies={openModalRegisterCompanies}
+            setModalRegisterCompanies={(e) => setModalRegisterCompanies(e)}
+            page={page}
+            setPage={(e) => setPage(e)}
+          />
+        )}
       </div>
       {openModalCategorie && (
         <ModalFramer
@@ -196,6 +206,15 @@ const RootLayout = () => {
               setPage('matriz-de-exames')
               setOpenModalRegister(false)
               setModalRegisterExamMatrix(e)
+            }}
+            setModalRegisterCompanies={(open) => {
+              // Se a página atual NÃO está entre as permitidas, força para 'convenios'
+              setPage((prev) =>
+                ALLOWED_PAGES.includes(prev) ? prev : 'convenios',
+              )
+
+              setOpenModalRegister(false)
+              setModalRegisterCompanies(Boolean(open))
             }}
             setModalRegisterBanks={() => {
               setPage('bancos')

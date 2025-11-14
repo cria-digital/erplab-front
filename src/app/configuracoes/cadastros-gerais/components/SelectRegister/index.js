@@ -17,6 +17,7 @@ const SelectRegister = ({
   setModalRegisterUser,
   setModalRegisterMethods,
   setModalRegisterExamMatrix,
+  setModalRegisterCompanies,
   setModalRegisterBanks,
   setModalFormFiels,
   setOpenModalRegister,
@@ -44,7 +45,13 @@ const SelectRegister = ({
         }}
       />
     ),
-    empresas: <Empresas />,
+    empresas: (
+      <Empresas
+        setModalRegisterCompanies={() => {
+          setModalRegisterCompanies(true)
+        }}
+      />
+    ),
     estrutura: <Estrutura />,
     documentacao: <Documentacao />,
     financeiro: (
