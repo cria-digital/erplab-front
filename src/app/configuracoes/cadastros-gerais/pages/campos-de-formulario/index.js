@@ -17,15 +17,15 @@ import { toast, ToastContainer } from 'react-toastify'
 import { Status } from './components/status'
 
 // Components
-import EditBank from './modal-content/editFormField'
-import ProfileBankAccount from './modal-content/profileFormField'
+import EditFormField from './modal-content/editFormField'
+import ProfileFormFields from './modal-content/profileFormField'
 import RegisterFormField from './modal-content/registerFormField'
 
 const CamposDeFormulario = ({
   modalRegisterFormField,
   setModalRegisterFormField,
 }) => {
-  const [selectedAccount, setSelectedAccount] = useState({})
+  const [selectedFormField, setSelectedFormField] = useState({})
 
   const [formFields, setFormFields] = useState([])
 
@@ -40,8 +40,8 @@ const CamposDeFormulario = ({
   const [searchTerm, setSearchTerm] = useState('')
 
   // modal
-  const [modalEditBank, setModalEditBank] = useState(false)
-  const [openModalProfileBankAccount, setOpenModalProfileBankAccount] =
+  const [modalEditFormField, setModalEditFormField] = useState(false)
+  const [openModalProfileFormFields, setOpenModalProfileFormFields] =
     useState(false)
 
   useEffect(() => {
@@ -279,8 +279,8 @@ const CamposDeFormulario = ({
                   <div
                     className="flex h-full items-center justify-center"
                     onClick={() => {
-                      setModalEditBank(true)
-                      setSelectedAccount(item)
+                      setModalEditFormField(true)
+                      setSelectedFormField(item)
                     }}
                   >
                     <Edit2 size="28" color="#737373" />
@@ -292,8 +292,8 @@ const CamposDeFormulario = ({
                   <div
                     className="flex h-full items-center justify-center"
                     onClick={() => {
-                      setOpenModalProfileBankAccount(true)
-                      setSelectedAccount(item)
+                      setOpenModalProfileFormFields(true)
+                      setSelectedFormField(item)
                     }}
                   >
                     <Book size="28" color="#737373" />
@@ -361,18 +361,21 @@ const CamposDeFormulario = ({
           findData={() => fetchFormsField('', 1, 10)}
         />
       </ModalUp>
-      <ModalUp isOpen={modalEditBank} onClose={() => setModalEditBank(false)}>
-        <EditBank
-          onClose={() => setModalEditBank(false)}
-          account={selectedAccount}
+      <ModalUp
+        isOpen={modalEditFormField}
+        onClose={() => setModalEditFormField(false)}
+      >
+        <EditFormField
+          onClose={() => setModalEditFormField(false)}
+          formField={selectedFormField}
           findData={() => fetchFormsField(searchTerm, currentPage, 10)}
         />
       </ModalUp>
       <ModalLeft
-        isOpen={openModalProfileBankAccount}
-        onClose={() => setOpenModalProfileBankAccount(false)}
+        isOpen={openModalProfileFormFields}
+        onClose={() => setOpenModalProfileFormFields(false)}
       >
-        <ProfileBankAccount account={selectedAccount} />
+        <ProfileFormFields formField={selectedFormField} />
       </ModalLeft>
       <ToastContainer />
     </div>

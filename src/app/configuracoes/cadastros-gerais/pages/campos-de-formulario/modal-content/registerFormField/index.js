@@ -1,12 +1,19 @@
 import CustomSelect from '@/components/CustomSelect'
+import ModalFramer from '@/components/ModalFramer'
 import { Outfit300, Outfit400, Outfit500 } from '@/fonts'
 import { CreateAlternative, UpdateField } from '@/helpers'
 import { FormikProvider, useFormik } from 'formik'
 import { Trash } from 'iconsax-reactjs'
+import { useState } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
+import CancelRegister from './components/CancelRegister'
 import { validationSchemaFormField } from './components/schema'
+import SuccessRegister from './components/SuccessRegister'
 
 const RegisterFormField = ({ onClose, fields, findData }) => {
+  const [step, setStep] = useState('')
+  const [openModalAlerts, setOpenModalAlerts] = useState(false)
+
   const formik = useFormik({
     validationSchema: validationSchemaFormField,
     validateOnBlur: false,
@@ -39,8 +46,10 @@ const RegisterFormField = ({ onClose, fields, findData }) => {
           // resetar o form se quiser:
           formik.resetForm()
           findData()
-          onClose()
         }
+
+        setStep('sucess')
+        setOpenModalAlerts(true)
       } catch (error) {
         console.error(error)
       } finally {
@@ -103,7 +112,22 @@ const RegisterFormField = ({ onClose, fields, findData }) => {
     formik.handleSubmit()
   }
 
-  console.log(formik.errors)
+  const steps = {
+    cancel: (
+      <CancelRegister
+        onClose={() => setOpenModalAlerts(false)}
+        onCloseRegister={() => onClose()}
+      />
+    ),
+    sucess: (
+      <SuccessRegister
+        onClose={() => {
+          setOpenModalAlerts(false)
+        }}
+        onCloseRegister={() => onClose()}
+      />
+    ),
+  }
 
   return (
     <FormikProvider value={formik}>
@@ -127,7 +151,10 @@ const RegisterFormField = ({ onClose, fields, findData }) => {
           <div className="flex gap-[16px]">
             <button
               type="button"
-              onClick={() => onClose()}
+              onClick={() => {
+                setStep('cancel')
+                setOpenModalAlerts(true)
+              }}
               className="flex h-[44px] w-[108px] items-center justify-evenly rounded-[8px] border border-[#F23434] hover:bg-[#FFE6E6]"
             >
               <span
@@ -363,6 +390,14 @@ const RegisterFormField = ({ onClose, fields, findData }) => {
           </div>
         </div>
       </form>
+      {openModalAlerts && (
+        <ModalFramer
+          open={openModalAlerts}
+          setOpen={() => setOpenModalAlerts(false)}
+        >
+          {steps[step]}
+        </ModalFramer>
+      )}
       <ToastContainer />
     </FormikProvider>
   )
