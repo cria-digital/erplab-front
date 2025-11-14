@@ -1,14 +1,13 @@
-import CustomSearch from '@/components/CustomSearch'
 import CustomSelect from '@/components/CustomSelect'
 import ModalFramer from '@/components/ModalFramer'
 import { Outfit300, Outfit400, Outfit500 } from '@/fonts'
 import {
   listAllActiveBanks,
+  ListAllCNAEs,
+  listAllServicesOfHealth,
   SearchCep,
-  SearchCNAE,
   UpdateUnit,
 } from '@/helpers'
-import useDebounce from '@/hooks/useDebounce'
 import { formatCep, formatCnpj, formatPhoneNumber } from '@/utils'
 import { Clock, CloseCircle, InfoCircle, Link, Trash } from 'iconsax-reactjs'
 import { useEffect, useRef, useState } from 'react'
@@ -67,16 +66,10 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
     ),
   )
 
-  const [searchTermCNAEPrincipal, setSearchTermCNAEPrincipal] = useState(
-    `${unit.cnaePrincipal.codigo} - ${unit.cnaePrincipal.descricao}`,
-  )
-
-  const [mainCNAEs, setMainCNAES] = useState([])
   const [mainCNAE, setMainCNAE] = useState(unit.cnaePrincipal)
 
-  const [searchTermCNAESecondary, setSearchTermCNAESecondary] = useState('')
   const [secondaryCNAE, setSecondaryCNAE] = useState({})
-  const [secondaryCNAEs, setSecondaryCNAEs] = useState('')
+
   const [selectSecondaryCNAE, setSelectSecondaryCNAE] = useState(
     unit?.cnaeSecundarios?.map((c) => c.cnae) || [],
   )
@@ -152,7 +145,11 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
   const [nationalSimpleOptant, setNationalSimpleOptant] = useState(
     unit?.optanteSimplesNacional,
   )
+
+  // coisas
   const [activeBanks, setActiveBanks] = useState([])
+  const [services, setServices] = useState([])
+  const [CNAEs, setCNAES] = useState([])
 
   // Certificado digital
   const [cert, setCert] = useState(false)
@@ -192,22 +189,44 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
   const [openModalAlerts, setOpenModalAlerts] = useState(false)
 
   useEffect(() => {
-    const findAllBanks = async () => {
+    const findUsersByFilters = async () => {
       try {
-        const response = await listAllActiveBanks()
-        const banks = response.data.map((item) => {
+        const [allBanks, allServices, allCnaes] = await Promise.all([
+          listAllActiveBanks(),
+          listAllServicesOfHealth(),
+          ListAllCNAEs(),
+        ])
+
+        const banks = allBanks.data.map((item) => {
           return {
             id: item.id,
             label: `${item.codigo} - ${item.nome}`,
           }
         })
+
+        const servcs = allServices.data.map((item) => {
+          return {
+            id: item.id,
+            label: `${item.codigo} - ${item.descricao}`,
+          }
+        })
+
+        const cns = allCnaes.data.map((item) => {
+          return {
+            id: item.id,
+            label: `${item.codigo} - ${item.descricao}`,
+          }
+        })
+
         setActiveBanks(banks)
-      } catch (e) {
-        console.log(e)
+        setServices(servcs)
+        setCNAES(cns)
+      } catch (error) {
+        console.error(error)
       }
     }
 
-    findAllBanks()
+    findUsersByFilters()
   }, [])
 
   const handleClick = () => {
@@ -357,45 +376,6 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
       setDistrict(result?.data?.bairro)
       setCity(result?.data?.cidade)
       setState(result?.data?.estado)
-    }
-  }
-
-  const handleChangeMainPrincipalService = (e) => {
-    setSearchTermCNAEPrincipal(e)
-    debounceChangMainCnae(e)
-  }
-
-  const debounceChangMainCnae = useDebounce(handlerMainCnae, 800)
-  // Filtra por termo de busca
-  async function handlerMainCnae(props) {
-    try {
-      const result = await SearchCNAE(props)
-
-      if (result.success) {
-        setMainCNAES(result.data)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const handleChangeSecondaryPrincipalService = (e) => {
-    setSearchTermCNAESecondary(e)
-    debounceChangeSecondaryCnae(e)
-  }
-
-  const debounceChangeSecondaryCnae = useDebounce(handlerSecondaryCnae, 800)
-
-  // Filtra por termo de busca
-  async function handlerSecondaryCnae(props) {
-    try {
-      const result = await SearchCNAE(props)
-
-      if (result.success) {
-        setSecondaryCNAEs(result.data)
-      }
-    } catch (error) {
-      console.log(error)
     }
   }
 
@@ -605,7 +585,7 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
               <CustomSelect
                 select={mainServiceCode}
                 setSelect={(e) => setMainServiceCode(e)}
-                options={mainServicesCodes}
+                options={services}
                 placeholder={'Selecione o código do serviço principal'}
                 className={'border border-[#BBBBBB]'}
               />
@@ -621,7 +601,7 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
                 <CustomSelect
                   select={secondaryServiceCode}
                   setSelect={(e) => setSecondaryServiceCode(e)}
-                  options={secondaryServiceCodes}
+                  options={services}
                   placeholder={'Selecione o código do serviço secundário'}
                   className={'border border-[#BBBBBB]'}
                 />
@@ -688,15 +668,12 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
                 CNAE pricipal
                 <strong className="text-[#F23434]">*</strong>
               </label>
-              <CustomSearch
-                inputValue={searchTermCNAEPrincipal}
-                onChange={handleChangeMainPrincipalService}
+              <CustomSelect
+                select={mainCNAE}
+                setSelect={(e) => setMainCNAE(e)}
+                options={CNAEs}
                 placeholder={`Digite o CNAE`}
-                options={mainCNAEs}
-                setSelect={(e) => {
-                  setMainCNAE(e)
-                  setSearchTermCNAEPrincipal(`${e.codigo} - ${e.descricao}`)
-                }}
+                className={'border border-[#BBBBBB]'}
               />
             </div>
             <div className="flex flex-1 flex-col gap-[4px]">
@@ -707,15 +684,12 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
                 <strong className="text-[#F23434]">*</strong>
               </label>
               <div className="flex flex-1 gap-3">
-                <CustomSearch
-                  inputValue={searchTermCNAESecondary}
-                  onChange={handleChangeSecondaryPrincipalService}
+                <CustomSelect
+                  select={secondaryCNAE}
+                  setSelect={(e) => setSecondaryCNAE(e)}
+                  options={CNAEs}
                   placeholder={`Digite o CNAE`}
-                  options={secondaryCNAEs}
-                  setSelect={(e) => {
-                    setSecondaryCNAE(e)
-                    setSearchTermCNAESecondary(`${e.codigo} - ${e.descricao}`)
-                  }}
+                  className={'border border-[#BBBBBB]'}
                 />
                 <button
                   type="button"
