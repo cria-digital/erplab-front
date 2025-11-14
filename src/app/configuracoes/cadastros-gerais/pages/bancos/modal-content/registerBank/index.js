@@ -2,7 +2,7 @@ import { Outfit400, Outfit500 } from '@/fonts'
 import { CreateBankAccount, listAllActiveBanks, listAllUnits } from '@/helpers'
 import { FormikProvider, useFormik } from 'formik'
 import { useEffect, useState } from 'react'
-import { toast, ToastContainer } from 'react-toastify'
+import { toast } from 'react-toastify'
 import { validationSchemaAccountBank } from './components/schema'
 
 import InformacoesGerais from './components/informacoesgerais'
@@ -277,7 +277,6 @@ const RegisterUser = ({ onClose, findData }) => {
           </div>
         </div>
       </form>
-      <ToastContainer />
     </FormikProvider>
   )
 }

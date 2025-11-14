@@ -209,11 +209,13 @@ const Users = ({ modalRegisterUser, setModalRegisterUser }) => {
       <div className="flex h-[40px] items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="flex h-[40px] w-[61px] items-center rounded-[8px] bg-[#F9F9F9]">
-            <span className={`${Outfit400.className} pl-2 text-[16px]`}>
+            <span
+              className={`${Outfit400.className} pl-2 text-[16px] text-[#222]`}
+            >
               01
             </span>
           </div>
-          <span className={`${Outfit300.className} text-[16px]`}>
+          <span className={`${Outfit300.className} text-[16px] text-[#222]`}>
             de 01 registros
           </span>
         </div>

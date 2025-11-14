@@ -60,58 +60,58 @@ const RegisterExams = ({ onClose }) => {
   // const [normalValueReferences, setNormalValueReferences] = useState('')
   const [recipientType, setRecipientType] = useState('')
 
-  const handleSubmit = () => {
-    const payload = {
-      codigo_interno: internalCode,
-      nome: examName,
-      sinonimos: synonyms,
-      codigo_tuss: TUSSCode,
-      codigo_amb: AMBCode,
-      codigo_sus: SUSCode,
-      tipo_exame_id: examType,
-      categoria: 'laboratorio',
-      subgrupo_id: subGroup,
-      setor_id: sector,
-      metodologia: methodologyUsed,
-      especialidade_requerida: specialty,
-      grupo: group,
-      peso: 100,
-      volume_min: 2.5,
-      volume_ideal: 5.0,
-      unidade_medida: unitOfMeasure,
-      amostra_biologica: biologicalSampleRequired,
-      tipo_recipiente: recipientType,
-      necessita_preparo: 'sim',
-      requisitos: requirementsStandards,
-      tipo_realizacao: 'interno',
-      prazo_entrega_dias: deliveryTime,
-      formato_prazo: '1 dia útil',
-      tem_valores_referencia: 'sim',
-      valores_referencia: {
-        adulto_masculino: {
-          hemoglobina: { min: 13.5, max: 17.5, unidade: 'g/dL' },
-          hematocrito: { min: 39, max: 50, unidade: '%' },
-        },
-        adulto_feminino: {
-          hemoglobina: { min: 12.0, max: 15.5, unidade: 'g/dL' },
-          hematocrito: { min: 35, max: 45, unidade: '%' },
-        },
-      },
-      tecnica_coleta: collectionTechnique,
-      preparo_coleta: {
-        geral: 'Jejum de 4 horas',
-        feminino: 'Informar se está menstruada',
-        infantil: 'Jejum de 2 horas para crianças',
-      },
-      lembretes: {
-        coletores: 'Homogeneizar suavemente o tubo após coleta',
-        recepcionistas: 'Verificar jejum do paciente',
-        ordem_servico: 'Coletar em tubo EDTA (roxo)',
-      },
-      status: 'ativo',
-      empresa_id: '1',
-    }
-  }
+  // const handleSubmit = () => {
+  //   const payload = {
+  //     codigo_interno: internalCode,
+  //     nome: examName,
+  //     sinonimos: synonyms,
+  //     codigo_tuss: TUSSCode,
+  //     codigo_amb: AMBCode,
+  //     codigo_sus: SUSCode,
+  //     tipo_exame_id: examType,
+  //     categoria: 'laboratorio',
+  //     subgrupo_id: subGroup,
+  //     setor_id: sector,
+  //     metodologia: methodologyUsed,
+  //     especialidade_requerida: specialty,
+  //     grupo: group,
+  //     peso: 100,
+  //     volume_min: 2.5,
+  //     volume_ideal: 5.0,
+  //     unidade_medida: unitOfMeasure,
+  //     amostra_biologica: biologicalSampleRequired,
+  //     tipo_recipiente: recipientType,
+  //     necessita_preparo: 'sim',
+  //     requisitos: requirementsStandards,
+  //     tipo_realizacao: 'interno',
+  //     prazo_entrega_dias: deliveryTime,
+  //     formato_prazo: '1 dia útil',
+  //     tem_valores_referencia: 'sim',
+  //     valores_referencia: {
+  //       adulto_masculino: {
+  //         hemoglobina: { min: 13.5, max: 17.5, unidade: 'g/dL' },
+  //         hematocrito: { min: 39, max: 50, unidade: '%' },
+  //       },
+  //       adulto_feminino: {
+  //         hemoglobina: { min: 12.0, max: 15.5, unidade: 'g/dL' },
+  //         hematocrito: { min: 35, max: 45, unidade: '%' },
+  //       },
+  //     },
+  //     tecnica_coleta: collectionTechnique,
+  //     preparo_coleta: {
+  //       geral: 'Jejum de 4 horas',
+  //       feminino: 'Informar se está menstruada',
+  //       infantil: 'Jejum de 2 horas para crianças',
+  //     },
+  //     lembretes: {
+  //       coletores: 'Homogeneizar suavemente o tubo após coleta',
+  //       recepcionistas: 'Verificar jejum do paciente',
+  //       ordem_servico: 'Coletar em tubo EDTA (roxo)',
+  //     },
+  //     status: 'ativo',
+  //     empresa_id: '1',
+  //   }
+  // }
 
   return (
     <form className="flex h-screen flex-col bg-[#F9F9F9]" onSubmit={() => null}>
@@ -175,7 +175,7 @@ const RegisterExams = ({ onClose }) => {
               <div className="flex gap-[16px]">
                 <div className="flex flex-1 flex-col gap-[4px]">
                   <label
-                    className={`${Outfit400.className} text-[14px] text-[##222222]`}
+                    className={`${Outfit400.className} text-[14px] text-[#222222]`}
                   >
                     Nome do exame
                     <strong className="text-[#F23434]">*</strong>
@@ -189,7 +189,7 @@ const RegisterExams = ({ onClose }) => {
                 </div>
                 <div className="flex flex-1 flex-col gap-[4px]">
                   <label
-                    className={`${Outfit400.className} text-[14px] text-[##222222]`}
+                    className={`${Outfit400.className} text-[14px] text-[#222222]`}
                   >
                     Código interno
                     <strong className="text-[#F23434]">*</strong>
@@ -203,7 +203,7 @@ const RegisterExams = ({ onClose }) => {
                 </div>
                 <div className="flex flex-1 flex-col gap-[4px]">
                   <label
-                    className={`${Outfit400.className} text-[14px] text-[##222222]`}
+                    className={`${Outfit400.className} text-[14px] text-[#222222]`}
                   >
                     Sinônimos para o exame
                   </label>
@@ -217,7 +217,7 @@ const RegisterExams = ({ onClose }) => {
                 <div className="flex flex-1 flex-col gap-[4px]">
                   <div className="flex justify-between">
                     <label
-                      className={`${Outfit400.className} flex text-[14px] text-[##222222]`}
+                      className={`${Outfit400.className} flex text-[14px] text-[#222222]`}
                     >
                       Código TUSS<strong className="text-[#F23434]">*</strong>
                     </label>
@@ -233,7 +233,7 @@ const RegisterExams = ({ onClose }) => {
                 <div className="flex flex-1 flex-col gap-[4px]">
                   <div className="flex flex-col gap-[4px]">
                     <label
-                      className={`${Outfit400.className} flex justify-between text-[14px] text-[##222222]`}
+                      className={`${Outfit400.className} flex justify-between text-[14px] text-[#222222]`}
                     >
                       Código LOINC
                       <InfoCircle size="20" color="#A1A1A1" />
@@ -249,7 +249,7 @@ const RegisterExams = ({ onClose }) => {
                 <div className="flex flex-1 flex-col gap-[4px]">
                   <div className="flex justify-between">
                     <label
-                      className={`${Outfit400.className} flex text-[14px] text-[##222222]`}
+                      className={`${Outfit400.className} flex text-[14px] text-[#222222]`}
                     >
                       Código SUS
                     </label>
@@ -267,7 +267,7 @@ const RegisterExams = ({ onClose }) => {
                 <div className="flex flex-1 flex-col gap-[4px]">
                   <div className="flex justify-between">
                     <label
-                      className={`${Outfit400.className} flex text-[14px] text-[##222222]`}
+                      className={`${Outfit400.className} flex text-[14px] text-[#222222]`}
                     >
                       Código AMB
                     </label>
@@ -282,7 +282,7 @@ const RegisterExams = ({ onClose }) => {
                 </div>
                 <div className="flex flex-1 flex-col gap-[4px]">
                   <label
-                    className={`${Outfit400.className} text-[14px] text-[##222222]`}
+                    className={`${Outfit400.className} text-[14px] text-[#222222]`}
                   >
                     Tipo de exame<strong className="text-[#F23434]">*</strong>
                   </label>
@@ -296,7 +296,7 @@ const RegisterExams = ({ onClose }) => {
                 </div>
                 <div className="flex flex-1 flex-col gap-[4px]">
                   <label
-                    className={`${Outfit400.className} text-[14px] text-[##222222]`}
+                    className={`${Outfit400.className} text-[14px] text-[#222222]`}
                   >
                     Especialidade do exame
                     <strong className="text-[#F23434]">*</strong>
@@ -314,7 +314,7 @@ const RegisterExams = ({ onClose }) => {
                 </div>
                 <div className="flex flex-1 flex-col gap-[4px]">
                   <label
-                    className={`${Outfit400.className} text-[14px] text-[##222222]`}
+                    className={`${Outfit400.className} text-[14px] text-[#222222]`}
                   >
                     Grupo
                     <strong className="text-[#F23434]">*</strong>
@@ -331,7 +331,7 @@ const RegisterExams = ({ onClose }) => {
               <div className="flex gap-[16px]">
                 <div className="flex flex-1 flex-col gap-[4px]">
                   <label
-                    className={`${Outfit400.className} flex text-[14px] text-[##222222]`}
+                    className={`${Outfit400.className} flex text-[14px] text-[#222222]`}
                   >
                     SubGrupo<strong className="text-[#F23434]">*</strong>
                   </label>
@@ -346,7 +346,7 @@ const RegisterExams = ({ onClose }) => {
                 </div>
                 <div className="flex flex-1 flex-col gap-[4px]">
                   <label
-                    className={`${Outfit400.className} text-[14px] text-[##222222]`}
+                    className={`${Outfit400.className} text-[14px] text-[#222222]`}
                   >
                     Setor<strong className="text-[#F23434]">*</strong>
                   </label>
@@ -360,7 +360,7 @@ const RegisterExams = ({ onClose }) => {
                 </div>
                 <div className="flex flex-1 flex-col gap-[4px]">
                   <label
-                    className={`${Outfit400.className} text-[14px] text-[##222222]`}
+                    className={`${Outfit400.className} text-[14px] text-[#222222]`}
                   >
                     Metodologia utilizada
                     <strong className="text-[#F23434]">*</strong>
@@ -375,7 +375,7 @@ const RegisterExams = ({ onClose }) => {
                 </div>
                 <div className="flex flex-1 flex-col gap-[4px]">
                   <label
-                    className={`${Outfit400.className} text-[14px] text-[##222222]`}
+                    className={`${Outfit400.className} text-[14px] text-[#222222]`}
                   >
                     Unidade de medida
                     <strong className="text-[#F23434]">*</strong>
@@ -390,7 +390,7 @@ const RegisterExams = ({ onClose }) => {
                 </div>
                 <div className="flex flex-col gap-[4px]">
                   <label
-                    className={`${Outfit400.className} flex justify-between text-[14px] text-[##222222]`}
+                    className={`${Outfit400.className} flex justify-between text-[14px] text-[#222222]`}
                   >
                     Peso
                   </label>
@@ -413,7 +413,7 @@ const RegisterExams = ({ onClose }) => {
                 </div>
                 <div className="flex flex-col gap-[4px]">
                   <label
-                    className={`${Outfit400.className} flex justify-between text-[14px] text-[##222222]`}
+                    className={`${Outfit400.className} flex justify-between text-[14px] text-[#222222]`}
                   >
                     Altura
                   </label>
@@ -436,7 +436,7 @@ const RegisterExams = ({ onClose }) => {
                 </div>
                 <div className="flex flex-col gap-[4px]">
                   <label
-                    className={`${Outfit400.className} flex justify-between text-[14px] text-[##222222]`}
+                    className={`${Outfit400.className} flex justify-between text-[14px] text-[#222222]`}
                   >
                     Volume
                   </label>
@@ -472,7 +472,7 @@ const RegisterExams = ({ onClose }) => {
             <div className="flex gap-[16px]">
               <div className="flex flex-1 flex-col gap-[4px]">
                 <label
-                  className={`${Outfit400.className} text-[14px] text-[##222222]`}
+                  className={`${Outfit400.className} text-[14px] text-[#222222]`}
                 >
                   Amostra biológica necessária
                   <strong className="text-[#F23434]">*</strong>
@@ -487,7 +487,7 @@ const RegisterExams = ({ onClose }) => {
               </div>
               <div className="flex flex-1 flex-col gap-[4px]">
                 <label
-                  className={`${Outfit400.className} text-[14px] text-[##222222]`}
+                  className={`${Outfit400.className} text-[14px] text-[#222222]`}
                 >
                   Amostra a enviar<strong className="text-[#F23434]">*</strong>
                 </label>
@@ -501,7 +501,7 @@ const RegisterExams = ({ onClose }) => {
               </div>
               <div className="flex flex-1 flex-col gap-[4px]">
                 <label
-                  className={`${Outfit400.className} text-[14px] text-[##222222]`}
+                  className={`${Outfit400.className} text-[14px] text-[#222222]`}
                 >
                   Tipo de recipiente para coleta
                   <strong className="text-[#F23434]">*</strong>
@@ -553,7 +553,7 @@ const RegisterExams = ({ onClose }) => {
             <div className="flex gap-[16px]">
               <div className="flex flex-1 flex-col gap-[4px]">
                 <label
-                  className={`${Outfit400.className} text-[14px] text-[##222222]`}
+                  className={`${Outfit400.className} text-[14px] text-[#222222]`}
                 >
                   Volume minímo requerido
                   <strong className="text-[#F23434]">*</strong>
@@ -568,7 +568,7 @@ const RegisterExams = ({ onClose }) => {
               </div>
               <div className="flex flex-1 flex-col gap-[4px]">
                 <label
-                  className={`${Outfit400.className} text-[14px] text-[##222222]`}
+                  className={`${Outfit400.className} text-[14px] text-[#222222]`}
                 >
                   Estabilidade<strong className="text-[#F23434]">*</strong>
                 </label>
@@ -681,7 +681,7 @@ const RegisterExams = ({ onClose }) => {
               </div>
               <div className="flex flex-col gap-[4px]">
                 <label
-                  className={`${Outfit400.className} flex justify-between text-[14px] text-[##222222]`}
+                  className={`${Outfit400.className} flex justify-between text-[14px] text-[#222222]`}
                 >
                   Termo de consentimento
                 </label>
@@ -905,7 +905,7 @@ const RegisterExams = ({ onClose }) => {
             </div>
             <div className="flex flex-1 flex-col gap-[4px]">
               <label
-                className={`${Outfit400.className} text-[14px] text-[##222222]`}
+                className={`${Outfit400.className} text-[14px] text-[222222]`}
               >
                 Distribuição
               </label>
@@ -930,7 +930,7 @@ const RegisterExams = ({ onClose }) => {
               <div className="flex gap-[16px]">
                 <div className="flex flex-1 flex-col gap-[4px]">
                   <label
-                    className={`${Outfit400.className} text-[14px] text-[##222222]`}
+                    className={`${Outfit400.className} text-[14px] text-[#222222]`}
                   >
                     Prazo de entrega dos resultados (em dias)
                     <strong className="text-[#F23434]">*</strong>
@@ -944,7 +944,7 @@ const RegisterExams = ({ onClose }) => {
                 </div>
                 <div className="flex flex-1 flex-col gap-[4px]">
                   <label
-                    className={`${Outfit400.className} text-[14px] text-[##222222]`}
+                    className={`${Outfit400.className} text-[14px] text-[#222222]`}
                   >
                     Formato do laudo
                     <strong className="text-[#F23434]">*</strong>
