@@ -10,7 +10,7 @@ export async function CreateMethod(payload) {
     const cookie = await cookies()
     const token = cookie.get(TOKEN_KEY)
 
-    const response = await api.post('/cadastros/empresas', payload, {
+    const response = await api.post('/exames/metodos', payload, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token.value,
@@ -67,8 +67,6 @@ export async function ListMethods(
     const queryString = params.toString() // Gera 'param1=value1&param2=value2'
     const url = `/exames/metodos${queryString ? '?' + queryString : ''}` // Adiciona '?' apenas se houver query string
 
-    console.log(url)
-
     const response = await api.get(url, {
       headers: {
         'Content-Type': 'application/json',
@@ -82,7 +80,7 @@ export async function ListMethods(
     }
   } catch (error) {
     const fallback = {
-      message: 'Erro desconhecido ao tentar buscar unidades.',
+      message: 'Erro desconhecido ao tentar buscar métodos',
       statusCode: 500,
       error: 'UnknownError',
     }
@@ -223,6 +221,70 @@ export async function UpdateMethod(enterpriseId, payload) {
   } catch (error) {
     const fallback = {
       message: 'Erro desconhecido ao tentar criar unidade',
+      statusCode: 500,
+      error: 'UnknownError',
+    }
+
+    const errData = error?.response?.data || fallback
+
+    return {
+      success: false,
+      error: errData,
+    }
+  }
+}
+
+export async function LinklaboratoryToMethod(payload) {
+  try {
+    const cookie = await cookies()
+    const token = cookie.get(TOKEN_KEY)
+
+    const response = await api.post('/exames/metodos', payload, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token.value,
+      },
+    })
+
+    return {
+      success: true,
+      data: response.data,
+    }
+  } catch (error) {
+    const fallback = {
+      message: 'Erro desconhecido ao tentar criar unidade',
+      statusCode: 500,
+      error: 'UnknownError',
+    }
+
+    const errData = error?.response?.data || fallback
+
+    return {
+      success: false,
+      error: errData,
+    }
+  }
+}
+
+export async function GetMethodPerId(id) {
+  try {
+    const cookie = await cookies()
+    const token = cookie.get(TOKEN_KEY)
+
+    const response = await api.get('/exames/metodos/' + id, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token ? 'Bearer ' + token.value : undefined,
+      },
+    })
+
+    return {
+      success: true,
+      data: response.data,
+    }
+  } catch (error) {
+    const fallback = {
+      message: 'Erro desconhecido ao tentar buscar métodos',
       statusCode: 500,
       error: 'UnknownError',
     }

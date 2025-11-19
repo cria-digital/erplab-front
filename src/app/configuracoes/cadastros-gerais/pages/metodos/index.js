@@ -10,10 +10,11 @@ import { useEffect, useState } from 'react'
 import { Status } from './components/status'
 
 // Components
-import RegisterExams from './modal-content/registerMethod'
+import EditMethod from './modal-content/editMethod'
+import RegisterMethod from './modal-content/registerMethod'
 
 const Methods = ({ modalRegisterMethods, setModalRegisterMethods }) => {
-  const [setSelectedUnit] = useState({})
+  const [selectedMethod, setSelectedMethod] = useState({})
 
   // focus
   const [isFocusedSearch, setIsFocusedSearch] = useState(false)
@@ -25,6 +26,7 @@ const Methods = ({ modalRegisterMethods, setModalRegisterMethods }) => {
   const [status, setStatus] = useState({ id: '', label: 'Tipos: Todas' })
   const [searchTerm, setSearchTerm] = useState()
   const [currentPage, setCurrentPage] = useState(1)
+  const [openModalEditMwthod, setOpenModalEditMethod] = useState(false)
 
   useEffect(() => {
     const fetchMethods = async () => {
@@ -39,6 +41,16 @@ const Methods = ({ modalRegisterMethods, setModalRegisterMethods }) => {
 
     fetchMethods()
   }, [])
+
+  const fetchMethods = async (trm = '', sts = '', pg = 1) => {
+    try {
+      const response = await ListMethods(trm, sts, pg, 10)
+      setListMethods(response.data.data)
+      setTotal(response.data.total)
+    } catch (error) {
+      console.error('Error fetching banks:', error)
+    }
+  }
 
   // Filtrar por status
   const findDataPerStatus = async (props) => {
@@ -213,7 +225,13 @@ const Methods = ({ modalRegisterMethods, setModalRegisterMethods }) => {
                 <td
                   className={`text-[14px] ${Outfit300.className} text-[#383838]`}
                 >
-                  <div className="flex h-full items-center justify-center">
+                  <div
+                    className="flex h-full items-center justify-center"
+                    onClick={() => {
+                      setOpenModalEditMethod(true)
+                      setSelectedMethod(item)
+                    }}
+                  >
                     <Edit2 size="28" color="#737373" />
                   </div>
                 </td>
@@ -222,7 +240,7 @@ const Methods = ({ modalRegisterMethods, setModalRegisterMethods }) => {
                     className="flex h-full items-center justify-center"
                     onClick={() => {
                       // setOpenModalProfileuUnit(true)
-                      setSelectedUnit(item)
+                      setSelectedMethod(item)
                     }}
                   >
                     <Book size="28" color="#737373" />
@@ -256,7 +274,20 @@ const Methods = ({ modalRegisterMethods, setModalRegisterMethods }) => {
         isOpen={modalRegisterMethods}
         onClose={() => setModalRegisterMethods(false)}
       >
-        <RegisterExams onClose={() => setModalRegisterMethods(false)} />
+        <RegisterMethod
+          onClose={() => setModalRegisterMethods(false)}
+          findData={() => fetchMethods()}
+        />
+      </ModalUp>
+      <ModalUp
+        isOpen={openModalEditMwthod}
+        onClose={() => setOpenModalEditMethod(false)}
+      >
+        <EditMethod
+          onClose={() => setOpenModalEditMethod(false)}
+          selectedMethod={selectedMethod}
+          findData={() => fetchMethods()}
+        />
       </ModalUp>
       {/* <ModalLeft
         isOpen={openModalProfileuUnit}

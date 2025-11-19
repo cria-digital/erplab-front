@@ -132,6 +132,38 @@ export async function ListAllEnterprises() {
   }
 }
 
+export async function ListAllEnterprisesPerType(type) {
+  try {
+    const cookie = await cookies()
+    const token = cookie.get(TOKEN_KEY)
+
+    const response = await api.get('/cadastros/empresas/tipo/' + type, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token ? 'Bearer ' + token.value : undefined,
+      },
+    })
+
+    return {
+      success: true,
+      data: response.data,
+    }
+  } catch (error) {
+    const fallback = {
+      message: 'Erro desconhecido ao tentar buscar unidades.',
+      statusCode: 500,
+      error: 'UnknownError',
+    }
+
+    const errData = error?.response?.data || fallback
+
+    return {
+      success: false,
+      error: errData,
+    }
+  }
+}
+
 export async function ActiveStatusEnterprise(enterpriseId) {
   try {
     const cookie = await cookies()

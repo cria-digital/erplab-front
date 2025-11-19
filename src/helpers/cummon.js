@@ -1,5 +1,8 @@
 'use server'
 
+import { cookies } from 'next/headers'
+import { TOKEN_KEY } from '../app/middleware'
+
 import api from './api'
 
 export async function SearchCep(cep) {
@@ -84,3 +87,35 @@ export async function ListAllCNAEs() {
     }
   }
 }
+
+export async function SearchCnpj(CNPJ) {
+  try {
+    const cookie = await cookies()
+    const token = cookie.get(TOKEN_KEY)
+
+    const auth = await api.get('/cadastros/empresas/cnpj/' + CNPJ, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token.value,
+      },
+    })
+
+    return {
+      success: true,
+      data: auth.data,
+    }
+  } catch (error) {
+    const fallback = {
+      message: error.response.data,
+      statusCode: 500,
+      error: 'UnknownError',
+    }
+
+    return {
+      success: false,
+      error: fallback,
+    }
+  }
+}
+
+
