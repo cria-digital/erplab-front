@@ -3,37 +3,6 @@ import { Clock, InfoCircle, Trash } from 'iconsax-reactjs'
 
 const Horarios = ({ formik }) => {
   const handleChange = (index, field, value, isArrayToggle = false) => {
-    // setOpeningHours((prev) =>
-    //   prev.map((item, i) => {
-    //     if (isArrayToggle && field === 'days') {
-    //       const exists = item[field].includes(value)
-
-    //       // Se for o item selecionado
-    //       if (i === index) {
-    //         return {
-    //           ...item,
-    //           [field]: exists
-    //             ? item[field].filter((v) => v !== value) // remove se já existe
-    //             : [...item[field], value], // adiciona se não existe
-    //         }
-    //       }
-
-    //       // Para os outros itens, removemos o dia caso exista
-    //       return {
-    //         ...item,
-    //         [field]: item[field].filter((v) => v !== value),
-    //       }
-    //     }
-
-    //     // Se for input "normal"
-    //     if (i === index) {
-    //       return { ...item, [field]: value }
-    //     }
-
-    //     return item
-    //   }),
-    // )
-
     formik.setFieldValue(
       'horarios',
       formik.values.horarios.map((item, i) => {
@@ -262,11 +231,23 @@ const Horarios = ({ formik }) => {
                       type="checkbox"
                       checked={formik.values.horarios[index].enabled}
                       onChange={(e) => {
-                        handleChange(index, 'enabled', e.target.checked)
-                        if (e.target.checked) {
-                          handleChange(index, 'returnInterval', '')
-                          handleChange(index, 'interval', '')
-                        }
+                        const checked = e.target.checked
+
+                        formik.setFieldValue(
+                          'horarios',
+                          formik.values.horarios.map((item, i) => {
+                            if (i !== index) return item
+
+                            return {
+                              ...item,
+                              enabled: checked,
+                              interval: checked ? '' : item.interval,
+                              returnInterval: checked
+                                ? ''
+                                : item.returnInterval,
+                            }
+                          }),
+                        )
                       }}
                       className={`${Outfit400.className} text-[#222222] outline-0`}
                     />
@@ -306,9 +287,10 @@ const Horarios = ({ formik }) => {
                 <div
                   className="flex flex-col justify-end py-[8px]"
                   onClick={() =>
-                    formik.setFieldValue('horarios', [
+                    formik.setFieldValue(
+                      'horarios',
                       formik.values.horarios.filter((_, i) => i !== index),
-                    ])
+                    )
                   }
                 >
                   <Trash size="28" color="#737373" />
