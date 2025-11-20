@@ -222,6 +222,7 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
             banco_id: e.bancoId,
             agencia: e.agencia,
             digito_agencia: e.digitoAgencia,
+            numero_conta: e.conta,
             digito_conta: e.digitoConta,
             tipo_conta: e.tipoDeConta.id,
           }
@@ -234,6 +235,7 @@ const RegisterUnityOfHealth = ({ onClose, findData }) => {
           setStep('sucess')
           setOpenModalAlerts(true)
           findData()
+          formik.resetForm()
         } else {
           responseCreateUnity.error.erros.forEach((element) => {
             toast.error(element, {
