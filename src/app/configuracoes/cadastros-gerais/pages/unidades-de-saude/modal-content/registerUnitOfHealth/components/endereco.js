@@ -10,7 +10,7 @@ const Endereco = ({ formik }) => {
 
   useEffect(() => {
     const findData = async () => {
-      const states = await SearchCities(formik?.values?.estado?.item?.uf)
+      const states = await SearchCities(formik?.values?.estado?.label)
       const stt = states.data.map((item) => {
         return {
           id: item.id,
@@ -150,7 +150,7 @@ const Endereco = ({ formik }) => {
               <label
                 className={`${Outfit400.className} text-[14px] text-[#222222]`}
               >
-                Complemento<strong className="text-[#F23434]">*</strong>
+                Complemento
               </label>
               <input
                 {...formik.getFieldProps('complemento')}

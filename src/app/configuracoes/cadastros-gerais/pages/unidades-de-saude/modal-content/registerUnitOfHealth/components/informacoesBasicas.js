@@ -115,7 +115,6 @@ const InformacoesBasicas = ({ formik, services, CNAEs }) => {
                 className={`${Outfit400.className} text-[14px] text-[#222222]`}
               >
                 Nome fantasia
-                <strong className="text-[#F23434]">*</strong>
               </label>
               <input
                 {...formik.getFieldProps('nomeFantasia')}
@@ -149,6 +148,7 @@ const InformacoesBasicas = ({ formik, services, CNAEs }) => {
                 className={`${Outfit400.className} text-[14px] text-[#222222]`}
               >
                 Inscrição estadual
+                <strong className="text-[#F23434]">*</strong>
               </label>
               <input
                 {...formik.getFieldProps('inscricaoEstadual')}
@@ -215,7 +215,6 @@ const InformacoesBasicas = ({ formik, services, CNAEs }) => {
       <div className="flex flex-1 flex-col gap-[4px]">
         <label className={`${Outfit400.className} text-[14px] text-[#222222]`}>
           Código do serviço principal
-          <strong className="text-[#F23434]">*</strong>
         </label>
         <CustomSelect
           select={formik.values.codigoServicoPrincipal}
@@ -228,7 +227,6 @@ const InformacoesBasicas = ({ formik, services, CNAEs }) => {
       <div className="flex flex-1 flex-col gap-[4px]">
         <label className={`${Outfit400.className} text-[14px] text-[#222222]`}>
           Código do serviço secundário
-          <strong className="text-[#F23434]">*</strong>
         </label>
         <div className="flex flex-1 gap-3">
           <CustomSelect
@@ -309,7 +307,6 @@ const InformacoesBasicas = ({ formik, services, CNAEs }) => {
       <div className="flex flex-1 flex-col gap-[4px]">
         <label className={`${Outfit400.className} text-[14px] text-[#222222]`}>
           CNAE principal
-          <strong className="text-[#F23434]">*</strong>
         </label>
         <CustomSelect
           select={formik.values.cnaePrincipal}
@@ -322,7 +319,6 @@ const InformacoesBasicas = ({ formik, services, CNAEs }) => {
       <div className="flex flex-1 flex-col gap-[4px]">
         <label className={`${Outfit400.className} text-[14px] text-[#222222]`}>
           CNAE(s) secundários
-          <strong className="text-[#F23434]">*</strong>
         </label>
         <div className="flex flex-1 gap-3">
           <CustomSelect

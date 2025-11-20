@@ -78,7 +78,7 @@ const Financeiro = ({ formik }) => {
                   { id: 'poupanca', label: 'POUPANÇA' },
                 ]}
                 placeholder="Tipo de conta"
-                className="w-[250px] border border-[#BBBBBB]"
+                className="border border-[#BBBBBB]"
               />
             </div>
 
