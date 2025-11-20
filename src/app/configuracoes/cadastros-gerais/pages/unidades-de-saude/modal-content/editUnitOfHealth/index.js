@@ -5,6 +5,7 @@ import { useFormik } from 'formik'
 import { useEffect, useState } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
 import SuccessEdit from './components/SuccessEdit'
+import { validationSchemaCreateUnit } from './schema'
 
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
@@ -67,36 +68,6 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
     return [...map.values()].map((g) => ({ ...g, days: [...new Set(g.days)] }))
   })
   // Financeiro
-  const [financial] = useState(() => {
-    const mapped = (unit?.contas_bancarias ?? []).map((i) => ({
-      banco: i.conta_bancaria?.nome ?? '',
-      codigoBanco: i.conta_bancaria?.codigo ?? '',
-      bancoId: i.bancoId ?? i.conta_bancaria?.banco_id ?? '',
-      agencia: i.agencia ?? '',
-      digitoAgencia: i.digitoAgencia ?? '',
-      contaCorrente: i.contaCorrente ?? '',
-      digitoConta: i.digitoConta ?? '',
-      tipoConta: i.tipoConta ?? '',
-      principal: !!i.principal,
-      observacoes: i.observacoes ?? '',
-    }))
-    return mapped.length
-      ? mapped
-      : [
-          {
-            banco: '',
-            codigoBanco: '',
-            bancoId: '',
-            agencia: '',
-            digitoAgencia: '',
-            contaCorrente: '',
-            digitoConta: '',
-            tipoConta: '',
-            principal: false,
-            observacoes: '',
-          },
-        ]
-  })
 
   useEffect(() => {
     const findUsersByFilters = async () => {
@@ -113,12 +84,33 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
           }
         })
 
+        const principalService = servcs.find(
+          (element) => element.id === unit?.codigoServicoPrincipal,
+        )
+
+        formik.setFieldValue('codigoServicoPrincipal', principalService)
+
+        const csecundarios = unit?.codigoServicoSecundario?.map((e) =>
+          servcs.find((element) => element.id === e),
+        )
+
+        formik.setFieldValue(
+          'codigoServicoSecundarioSelecionados',
+          csecundarios,
+        )
+
         const cns = allCnaes.data.map((item) => {
           return {
             id: item.id,
             label: `${item.codigo} - ${item.descricao}`,
           }
         })
+
+        const principalCnae = cns.find(
+          (element) => element.id === unit?.cnaePrincipalId,
+        )
+
+        formik.setFieldValue('cnaePrincipal', principalCnae)
 
         setServices(servcs)
         setCNAES(cns)
@@ -130,98 +122,8 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
     findUsersByFilters()
   }, [])
 
-  const handleSubmit = async () => {
-    setLoading(true)
-    const payload = {
-      nomeUnidade: name,
-      codigoInterno: internalCode,
-      cnpj: cnpj.replace(/\D/g, '').slice(0, 14),
-      razaoSocial: corporateReason,
-      nomeFantasia: fantasyName,
-      inscricaoMunicipal: municipalRegistration,
-      inscricaoEstadual: stateRegistration,
-      cnes: CNES,
-      contatosUnidade: contacts,
-      email,
-      codigoServicoPrincipal: mainServiceCode.id,
-      codigoServicoSecundario: selectSecondaryServiceCode.map((e) => {
-        return e.id
-      }),
-      cnaePrincipalId: mainCNAE?.id,
-      cep: cep.replace('-', ''),
-      rua: street,
-      numero: number,
-      bairro: district,
-      complemento: complement,
-      estado: state,
-      cidade: city,
-      nomeResponsavel: responsibleName,
-      contatoResponsavel: responsibleContact,
-      emailResponsavel: responsibleEmail,
-      irrfPercentual: Number(IRRF),
-      pisPercentual: Number(PIS),
-      cofinsPercentual: Number(COFINS),
-      csllPercentual: Number(CSLL),
-      issPercentual: Number(ISS),
-      ibsPercentual: Number(IBS),
-      cbsPercentual: Number(CBS),
-      reterIss: retainISS,
-      reterIr: retainIR,
-      reterPcc: retainPCC,
-      reterIbs: retainIBS,
-      reterCbs: retainCBS,
-      optanteSimplesNacional: nationalSimpleOptant,
-      certificadoDigitalVinculado: !!cert,
-      ativo: true,
-      horariosAtendimento: openingHours.flatMap((item) =>
-        item.days.map((dia) => ({
-          diaSemana: dia,
-          horarioInicio: item.of || '',
-          horarioFim: item.until || '',
-          intervaloInicio: item.interval || '00:00',
-          intervaloFim: item.returnInterval || '00:00',
-          semIntervalo: item.enabled,
-        })),
-      ),
-      dadosBancarios: financial.map((e) => {
-        return {
-          bancoId: e.bancoId,
-          agencia: e.agencia,
-          digitoAgencia: e.digitoAgencia,
-          contaCorrente: e.contaCorrente,
-          digitoConta: e.digitoConta,
-          tipoConta: 'CORRENTE',
-          principal: true,
-          observacoes: '0',
-        }
-      }),
-      cnaeSecundarios: selectSecondaryCNAE.map((e) => {
-        return { cnaeId: e.id }
-      }),
-    }
-
-    try {
-      const responseCreateUnity = await UpdateUnit(unit?.id, payload)
-
-      if (responseCreateUnity.success) {
-        setOpenModalAlerts(true)
-        findData()
-      } else {
-        responseCreateUnity.error.message.forEach((element) => {
-          toast.error(element, {
-            position: 'top-right',
-          })
-        })
-      }
-    } catch (error) {
-      console.log('erro', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
   const formik = useFormik({
-    // validationSchema: validationSchemaCreateUnit,
+    validationSchema: validationSchemaCreateUnit,
     validateOnBlur: false,
     validateOnChange: true,
     initialValues: {
@@ -237,22 +139,10 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
       cnes: unit?.cnes,
       telefone: unit?.contatosUnidade,
       email: unit?.email,
-      codigoServicoPrincipal: {
-        id: unit?.codigoServicoPrincipal?.id,
-        label: `${unit?.codigoServicoPrincipal?.codigo} - ${unit?.codigoServicoPrincipal?.descricao}`,
-      },
+      codigoServicoPrincipal: {},
       codigoServicoSecundario: {},
-      codigoServicoSecundarioSelecionados:
-        unit?.codigoServicoSecundario?.map((c) => {
-          return {
-            id: c?.cnae?.id,
-            label: `${c?.cnae?.codigo} - ${c?.cnae?.descricao}`,
-          }
-        }) || [],
-      cnaePrincipal: {
-        id: unit?.cnaePrincipal.codigo,
-        label: `${unit?.cnaePrincipal?.codigo} - ${unit?.cnaePrincipal?.descricao}`,
-      },
+      codigoServicoSecundarioSelecionados: [],
+      cnaePrincipal: {},
       cnaeSecundario: {},
       cnaesSecundariosSelecionados:
         unit?.cnaeSecundarios?.map((c) => {
@@ -268,25 +158,30 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
       numero: unit?.numero,
       bairro: unit?.bairro,
       complemento: unit?.complemento,
-      estado: unit?.estado,
-      cidade: unit?.cidade,
-
+      estado: {
+        id: '',
+        label: unit?.estado,
+      },
+      cidade: {
+        id: '',
+        label: unit?.cidade,
+      },
       // horarios
       horarios: openingHours,
 
       // responsavel
       nomeResponsavel: unit?.nomeResponsavel,
-      emailResponsavel: unit?.contatoResponsavel,
-      contatoResponsavel: unit?.emailResponsavel,
+      emailResponsavel: unit?.emailResponsavel,
+      contatoResponsavel: unit?.contatoResponsavel,
 
       // impostos
-      irrf: unit?.irrfPercentual,
-      pis: unit?.pisPercentual,
-      cofins: unit?.cofinsPercentual,
-      csll: unit?.csllPercentual,
-      iss: unit?.issPercentual,
-      ibs: unit?.ibsPercentual,
-      cbs: unit?.cbsPercentual,
+      irrf: Number(unit?.irrfPercentual),
+      pis: Number(unit?.pisPercentual),
+      cofins: Number(unit?.cofinsPercentual),
+      csll: Number(unit?.csllPercentual),
+      iss: Number(unit?.issPercentual),
+      ibs: Number(unit?.ibsPercentual),
+      cbs: Number(unit?.cbsPercentual),
       reterISS: unit?.reterIss,
       reterIR: unit?.reterIr,
       reterPCC: unit?.reterPcc,
@@ -295,7 +190,27 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
       optantePeloSimples: unit?.optanteSimplesNacional,
 
       // financeiro
-      financeiro: financial,
+      financeiro: unit?.contas_bancarias.map((i) => {
+        return {
+          banco: i.conta_bancaria?.banco?.nome, // não tem
+          codigoBanco: i.conta_bancaria?.banco?.codigo, // não tem
+          bancoId: i.conta_bancaria?.banco_id, // id interno/opcional
+          agencia: i.conta_bancaria?.agencia,
+          tipoDeConta:
+            i.conta_bancaria?.tipo_conta === 'corrente'
+              ? {
+                  id: 'corrente',
+                  label: 'CORRENTE',
+                }
+              : {
+                  id: 'poupanca',
+                  label: 'POUPANÇA',
+                },
+          digitoAgencia: i.conta_bancaria?.digito_agencia,
+          conta: i.conta_bancaria?.numero_conta,
+          digitoConta: i.conta_bancaria?.digito_conta,
+        }
+      }),
 
       // certificado
       certificado: unit?.certificadoDigitalVinculado,
@@ -314,7 +229,7 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
         contatosUnidade: values.telefone,
         email: values.email,
         codigoServicoPrincipal: values.codigoServicoPrincipal.id || '',
-        codigoServicoSecundario: values.cnaesSecundariosSelecionados.map(
+        codigoServicoSecundario: values.codigoServicoSecundarioSelecionados.map(
           (e) => {
             return e.id
           },
@@ -362,6 +277,7 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
           return {
             banco_id: e.bancoId,
             agencia: e.agencia,
+            numero_conta: e.conta,
             digito_agencia: e.digitoAgencia,
             digito_conta: e.digitoConta,
             tipo_conta: e.tipoDeConta.id,
@@ -370,17 +286,19 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
       }
 
       try {
-        // const responseCreateUnity = await CreateUnit(payload)
-        // if (responseCreateUnity.success) {
-        //   setOpenModalAlerts(true)
-        //   findData()
-        // } else {
-        //   responseCreateUnity.error.erros.forEach((element) => {
-        //     toast.error(element, {
-        //       position: 'top-right',
-        //     })
-        //   })
-        // }
+        const responseCreateUnity = await UpdateUnit(unit?.id, payload)
+
+        if (responseCreateUnity.success) {
+          setOpenModalAlerts(true)
+          findData()
+          formik.resetForm()
+        } else {
+          responseCreateUnity.error.message.forEach((element) => {
+            toast.error(element, {
+              position: 'top-right',
+            })
+          })
+        }
       } catch (error) {
         console.log('erro', error)
       } finally {
@@ -389,66 +307,135 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
     },
   })
 
-  return (
-    <form className="flex h-screen flex-col bg-[#F9F9F9]" onSubmit={() => null}>
-      <div className="flex h-[88px] items-center justify-between border-b border-[#E7E7E7] bg-[#fff] px-[48px]">
-        <div className="flex flex-col">
-          <span
-            className={` ${Outfit400.className} text-[16px] text-[#0F9B7F]`}
-          >
-            Editar
-          </span>
-          <span
-            className={` ${Outfit500.className} text-[16px] text-[#222222]`}
-          >
-            Unidades de saúde
-          </span>
-        </div>
-        <div className="flex gap-[16px]">
-          <button
-            type="button"
-            onClick={() => onClose()}
-            className="flex h-[44px] w-[108px] items-center justify-evenly rounded-[8px] border border-[#F23434]"
-          >
-            <span className={`${Outfit400.className} text-[#F23434] uppercase`}>
-              Cancelar
-            </span>
-          </button>
-          <button
-            type="button"
-            onClick={() => handleSubmit()}
-            className="flex h-[44px] items-center justify-evenly rounded-[8px] bg-[#A9A9A9] px-4 text-[#494949] hover:bg-[#0F9B7F] hover:text-[#fff]"
-          >
-            <span className={`${Outfit400.className} uppercase`}>
-              {loading ? 'Salvando' : 'Salvar'}
-            </span>
-          </button>
-        </div>
-      </div>
+  const getErrorMessages = (errors) => {
+    const messages = []
 
-      {/* <div className="flex h-full w-full gap-x-3 overflow-x-auto"> */}
-      <div className="flex h-full w-screen gap-x-3 overflow-x-auto">
-        <div className="mx-[48px] my-[28px] flex h-fit flex-1 flex-col gap-[32px] rounded bg-[#fff] p-[48px]">
-          {/* informacoes */}
-          <InformacoesBasicas
-            formik={formik}
-            services={services}
-            CNAEs={CNAEs}
-          />
-          {/* endereco */}
-          <Endereco formik={formik} />
-          {/* horários */}
-          <Horarios formik={formik} />
-          {/* responsável */}
-          <Responsaveis formik={formik} />
-          {/* impostos */}
-          <Impostos formik={formik} />
-          {/* financeiro */}
-          <Financeiro formik={formik} />
-          {/* certificado digital */}
-          <CertificadoDigital formik={formik} />
+    const walk = (err) => {
+      if (!err) return
+
+      if (typeof err === 'string') {
+        messages.push(err)
+        return
+      }
+
+      if (Array.isArray(err)) {
+        err.forEach(walk)
+        return
+      }
+
+      if (typeof err === 'object') {
+        Object.values(err).forEach(walk)
+      }
+    }
+
+    walk(errors)
+
+    // remove duplicadas
+    return [...new Set(messages)]
+  }
+
+  const handleValidateAndSubmit = async () => {
+    const errors = await formik.validateForm()
+
+    if (Object.keys(errors).length > 0) {
+      const messages = getErrorMessages(errors)
+
+      toast.error(
+        <div>
+          <p>Corrija os campos abaixo:</p>
+          <ul className="mt-2 list-disc pl-5">
+            {messages.map((msg, index) => (
+              <li key={index}>{msg}</li>
+            ))}
+          </ul>
+        </div>,
+        {
+          position: 'top-right',
+          autoClose: 8000,
+        },
+      )
+
+      return // não faz submit
+    }
+
+    // se não tiver erro, chama o submit do formik
+    formik.handleSubmit()
+  }
+
+  return (
+    <>
+      <form
+        className="flex h-screen flex-col bg-[#F9F9F9]"
+        onSubmit={() => null}
+      >
+        <div className="flex h-[88px] items-center justify-between border-b border-[#E7E7E7] bg-[#fff] px-[48px]">
+          <div className="flex flex-col">
+            <span
+              className={` ${Outfit400.className} text-[16px] text-[#0F9B7F]`}
+            >
+              Editar
+            </span>
+            <span
+              className={` ${Outfit500.className} text-[16px] text-[#222222]`}
+            >
+              Unidades de saúde
+            </span>
+          </div>
+          <div className="flex gap-[16px]">
+            <button
+              type="button"
+              onClick={() => onClose()}
+              className="flex h-[44px] w-[108px] items-center justify-evenly rounded-[8px] border border-[#F23434]"
+            >
+              <span
+                className={`${Outfit400.className} text-[#F23434] uppercase`}
+              >
+                Cancelar
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={handleValidateAndSubmit}
+              className={`flex h-[44px] w-[128px] items-center justify-evenly rounded-[8px] ${
+                formik.isValid
+                  ? 'bg-[#0F9B7F] text-white hover:from-[#3BC1E2] hover:to-[#1D6F87]'
+                  : 'bg-[#A9A9A9] text-[#494949]'
+              } ${Outfit400.className}`}
+              disabled={loading}
+            >
+              <span className={`${Outfit400.className} uppercase`}>
+                {loading ? 'Salvando' : 'Salvar'}
+              </span>
+            </button>
+          </div>
         </div>
-      </div>
+
+        {/* <div className="flex h-full w-full gap-x-3 overflow-x-auto"> */}
+        <div className="flex h-full w-screen gap-x-3 overflow-x-auto">
+          <div className="mx-[48px] my-[28px] flex h-fit flex-1 flex-col gap-[32px] rounded bg-[#fff] p-[48px]">
+            {/* informacoes */}
+            <InformacoesBasicas
+              formik={formik}
+              services={services}
+              CNAEs={CNAEs}
+            />
+            {/* endereco */}
+            <Endereco formik={formik} />
+            {/* horários */}
+            <Horarios formik={formik} />
+            {/* responsável */}
+            <Responsaveis formik={formik} />
+            {/* impostos */}
+            <Impostos formik={formik} />
+            {/* financeiro */}
+            <Financeiro formik={formik} />
+            {/* certificado digital */}
+            <CertificadoDigital formik={formik} />
+          </div>
+        </div>
+
+        <ToastContainer />
+      </form>
       {openModalAlerts && (
         <ModalFramer
           open={openModalAlerts}
@@ -457,8 +444,7 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
           <SuccessEdit onCloseRegister={() => onClose()} />
         </ModalFramer>
       )}
-      <ToastContainer />
-    </form>
+    </>
   )
 }
 
