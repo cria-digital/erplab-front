@@ -15,7 +15,7 @@ import Exams from './pages/exames'
 import Kits from './pages/kits'
 import ExamMatrix from './pages/matrizes-de-exames'
 import Methods from './pages/metodos'
-import Profissionais from './pages/profissionais/page'
+import Profissionais from './pages/profissionais'
 import UnitOfHealth from './pages/unidades-de-saude'
 import Users from './pages/usuarios'
 
@@ -52,6 +52,7 @@ const RootLayout = () => {
   const [modalRegisterExamMatrix, setModalRegisterExamMatrix] = useState(false)
   const [modalRegisterUser, setModalRegisterUser] = useState(false)
   const [modalRegisterMethods, setModalRegisterMethods] = useState(false)
+  const [modalRegisterAmostras, setModalRegisterAmostras] = useState(false)
 
   // Modal Emporesas
   const [openModalRegisterCompanies, setModalRegisterCompanies] =
@@ -104,7 +105,12 @@ const RootLayout = () => {
         setModalRegisterMethods={(e) => setModalRegisterMethods(e)}
       />
     ),
-    amostras: <Amostras />,
+    amostras: (
+      <Amostras
+        modalRegisterAmostras={modalRegisterAmostras}
+        setModalRegisterAmostras={(e) => setModalRegisterAmostras(e)}
+      />
+    ),
     kits: <Kits />,
     tabelaDePrecos: <TabelaDePrecos />,
     salasSetores: <SalasSetores />,
@@ -119,7 +125,7 @@ const RootLayout = () => {
       />
     ),
     adquirentes: <Adquirentes />,
-    hieraquiaCFO: <HierarquiaCFO />,
+    hierarquiaCFO: <HierarquiaCFO />,
     importacaoDeTabelas: <ImportacaoDeTabelas />,
     integracoes: <Integracoes />,
     'campos-de-fomulario': (
@@ -201,6 +207,11 @@ const RootLayout = () => {
               setPage('metodos')
               setOpenModalRegister(false)
               setModalRegisterMethods(true)
+            }}
+            setModalRegisterAmostras={() => {
+              setPage('amostras')
+              setOpenModalRegister(false)
+              setModalRegisterAmostras(true)
             }}
             setModalRegisterExamMatrix={(e) => {
               setPage('matriz-de-exames')
