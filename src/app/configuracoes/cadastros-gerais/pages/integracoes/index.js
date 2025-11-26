@@ -33,7 +33,7 @@ const Integrations = ({ openModalIntegracoes, setOpenModalIntegracoes }) => {
   useEffect(() => {
     const fecthIntegrations = async () => {
       const result = await ListIntegrations()
-      setIntegrations(result.data)
+      setIntegrations(result.data.data)
     }
 
     fecthIntegrations()
@@ -41,7 +41,7 @@ const Integrations = ({ openModalIntegracoes, setOpenModalIntegracoes }) => {
 
   const fecthIntegrations = async () => {
     const result = await ListIntegrations()
-    setIntegrations(result.data)
+    setIntegrations(result.data.data)
   }
 
   const deleteIntegration = async (item) => {
@@ -130,7 +130,7 @@ const Integrations = ({ openModalIntegracoes, setOpenModalIntegracoes }) => {
               Código de identificação
             </th>
             <th
-              className={`text-[13px] ${Outfit400.className} text-start text-[#717171]`}
+              className={`text-[13px] ${Outfit400.className} text-center text-[#717171]`}
             >
               Ativo
             </th>
