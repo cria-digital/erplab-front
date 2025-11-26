@@ -1,22 +1,76 @@
 import SuccessRegister from '@/components/Alerts/SuccessRegister'
 import ModalFramer from '@/components/ModalFramer'
 import { Outfit400 } from '@/fonts'
-import { CreateEnterprise } from '@/helpers'
+import {
+  CreateEnterprise,
+  SearchCadastroPaciente,
+  SearchOrdemDeServico,
+  SearchTiss,
+  UpdateConvenio,
+} from '@/helpers'
 import { percentBRToNumber } from '@/utils'
 import { useFormik } from 'formik'
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { toast } from 'react-toastify'
 import { validationSchemaEnterprises } from '../schemas'
 
+import Atendimento from './components/atendimento'
+import InformacoesEspecificas from './components/informacoesEspecificas'
 import InformacoesGerais from './components/informacoesGerais'
+import Instrucoes from './components/instrucoes'
+import Integracao from './components/integracao'
+import Planos from './components/planos'
+import Restricoes from './components/restricoes'
 
 const Convenios = forwardRef(
   (
-    { formRegister, states, onClose, onValidationChange, setLoading, findData },
+    {
+      formRegister,
+      states,
+      fields,
+      onClose,
+      onValidationChange,
+      setLoading,
+      findData,
+    },
     ref,
   ) => {
     const [tab, setTab] = useState('informacoesGerais')
     const [openModalAlerts, setOpenModalAlerts] = useState(false)
+
+    const [cadPacientesOpcionais, setCadPacientesOpcionais] = useState([])
+
+    const [cadPacientesObrigatorio, setCadPacientesObrigatorio] = useState([])
+
+    const [cadOrdemServicoOpcionais, setCadOrdemServicoOpcionais] = useState([])
+
+    const [cadOrdemServicoObrigatorio, setCadOrdemServicoObrigatorio] =
+      useState([])
+
+    const [cadTissOpcionais, setCadTissOpcionais] = useState([])
+
+    const [cadTissObrigatorios, setCadTissObrigatorios] = useState([])
+
+    useEffect(() => {
+      const findUsersByFilters = async () => {
+        try {
+          const [optCadastroPaciente, optOrdemDeServico, optTiss] =
+            await Promise.all([
+              SearchCadastroPaciente(),
+              SearchOrdemDeServico(),
+              SearchTiss(),
+            ])
+
+          setCadPacientesOpcionais(optCadastroPaciente.data)
+          setCadOrdemServicoOpcionais(optOrdemDeServico.data)
+          setCadTissOpcionais(optTiss.data)
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
+      findUsersByFilters()
+    }, [])
 
     const formik = useFormik({
       validationSchema: validationSchemaEnterprises,
@@ -59,6 +113,34 @@ const Convenios = forwardRef(
         optantePeloSimples: formRegister.values.optantePeloSimples,
         financeiro: formRegister.values.financeiro,
         formaDePagamento: formRegister.values.formaDePagamento,
+        nomeConvenio: '',
+        registroAns: '',
+        matricula: '',
+        tipoConvenio: {},
+        formaLiquidacao: {},
+        valorCH: '',
+        valorFilme: '',
+        diaVencimento: '',
+        cnes: '',
+        tiss: false,
+        versaoTiss: '',
+        tissCodigoOperadora: '',
+        codigoOperadora: '',
+        codigoPrestador: '',
+        envio: {},
+        faturaAte: {},
+        vencimento: '',
+        contrato: '',
+        ultimoAjuste: '',
+        instrucoesParaFaturmento: '',
+        tabelaDeServico: {},
+        tabelaBase: {},
+        tabelaMaterial: {},
+        coParticipacao: false,
+        notaFiscalfatura: false,
+        contato: '',
+        instrucoes: '',
+        observacoes: '',
       },
       onSubmit: async (values) => {
         setLoading(true)
@@ -111,6 +193,41 @@ const Convenios = forwardRef(
           const responseCreateEnterprise = await CreateEnterprise(payload)
 
           if (responseCreateEnterprise.success) {
+            // fazer o update mandando as outras informações específicas
+
+            const payloadUpdate = {
+              nome: values.nomeConvenio,
+              registro_ans: values.registroAns,
+              matricula: values.matricula,
+              tipo_convenio_id: values.tipoConvenio.id,
+              forma_liquidacao_id: values.formaLiquidacao.id,
+              valor_ch: values.valorCH,
+              valor_filme: values.valorFilme,
+              tiss: values.tiss,
+              versao_tiss: values.versaoTiss,
+              codigo_operadora_tiss: values.tissCodigoOperadora,
+              codigo_operadora_autorizacao: values.codigoOperadora,
+              codigo_prestador: values.codigoPrestador,
+              envio_faturamento_id: values.envio.id,
+              fatura_ate_dia: values.faturaAte,
+              dia_vencimento: values.diaVencimento,
+              data_contrato: values.contrato,
+              data_ultimo_ajuste: values.ultimoAjuste,
+              instrucoes_faturamento: values.instrucoesParaFaturmento,
+              tabela_servico_id: values.tabelaDeServico.id,
+              tabela_base_id: values.tabelaBase.id,
+              tabela_material_id: values.tabelaMaterial.id,
+              cnes: values.cnes,
+              co_participacao: true,
+              nota_fiscal_exige_fatura: true,
+              contato: values.contato,
+              instrucoes: values.instrucoes,
+              observacoes_gerais: values.observacoes,
+              ativo: true,
+            }
+
+            await UpdateConvenio(payloadUpdate)
+
             setOpenModalAlerts(true)
             findData()
           } else {
@@ -194,10 +311,36 @@ const Convenios = forwardRef(
 
     const steps = {
       informacoesGerais: <InformacoesGerais formik={formik} states={states} />,
+      informacoesEspecificas: (
+        <InformacoesEspecificas formik={formik} fields={fields} />
+      ),
+      integracao: <Integracao formik={formik} />,
+      atendimento: (
+        <Atendimento
+          formik={formik}
+          cadPacientesOpcionais={cadPacientesOpcionais}
+          setCadPacientesOpcionais={(e) => setCadPacientesOpcionais(e)}
+          cadPacientesObrigatorio={cadPacientesObrigatorio}
+          setCadPacientesObrigatorio={(e) => setCadPacientesObrigatorio(e)}
+          cadOrdemServicoOpcionais={cadOrdemServicoOpcionais}
+          setCadOrdemServicoOpcionais={(e) => setCadOrdemServicoOpcionais(e)}
+          cadOrdemServicoObrigatorio={cadOrdemServicoObrigatorio}
+          setCadOrdemServicoObrigatorio={(e) =>
+            setCadOrdemServicoObrigatorio(e)
+          }
+          cadTissOpcionais={cadTissOpcionais}
+          setCadTissOpcionais={(e) => setCadTissOpcionais(e)}
+          cadTissObrigatorios={cadTissObrigatorios}
+          setCadTissObrigatorios={(e) => setCadTissObrigatorios(e)}
+        />
+      ),
+      restricoes: <Restricoes formik={formik} />,
+      planos: <Planos formik={formik} />,
+      instrucoes: <Instrucoes formik={formik} />,
     }
 
     return (
-      <div className="mx-[48px] my-[28px] flex h-fit flex-1 flex-col rounded">
+      <div className="mx-[48px] my-7 flex h-fit flex-1 flex-col rounded">
         <div className="flex h-[56px] items-center gap-8 px-[48px]">
           <button
             type="button"
@@ -215,36 +358,36 @@ const Convenios = forwardRef(
           </button>
           <button
             type="button"
-            onClick={() => setTab('vincularExames')}
-            className={`${Outfit400.className} ${tab === 'vincularExames' && 'border-b-2 border-[#0F9B7F] bg-white'} h-[56px] rounded-tl-[8px] rounded-tr-[8px] px-2 text-[16px] text-[#222]`}
+            onClick={() => setTab('integracao')}
+            className={`${Outfit400.className} ${tab === 'integracao' && 'border-b-2 border-[#0F9B7F] bg-white'} h-[56px] rounded-tl-[8px] rounded-tr-[8px] px-2 text-[16px] text-[#222]`}
           >
             INTEGRAÇÃO
           </button>
           <button
             type="button"
-            onClick={() => setTab('vincularExames')}
-            className={`${Outfit400.className} ${tab === 'vincularExames' && 'border-b-2 border-[#0F9B7F] bg-white'} h-[56px] rounded-tl-[8px] rounded-tr-[8px] px-2 text-[16px] text-[#222]`}
+            onClick={() => setTab('atendimento')}
+            className={`${Outfit400.className} ${tab === 'atendimento' && 'border-b-2 border-[#0F9B7F] bg-white'} h-[56px] rounded-tl-[8px] rounded-tr-[8px] px-2 text-[16px] text-[#222]`}
           >
             ATENDIMENTO
           </button>
           <button
             type="button"
-            onClick={() => setTab('vincularExames')}
-            className={`${Outfit400.className} ${tab === 'vincularExames' && 'border-b-2 border-[#0F9B7F] bg-white'} h-[56px] rounded-tl-[8px] rounded-tr-[8px] px-2 text-[16px] text-[#222]`}
+            onClick={() => setTab('restricoes')}
+            className={`${Outfit400.className} ${tab === 'restricoes' && 'border-b-2 border-[#0F9B7F] bg-white'} h-[56px] rounded-tl-[8px] rounded-tr-[8px] px-2 text-[16px] text-[#222]`}
           >
             RESTRIÇÕES
           </button>
           <button
             type="button"
-            onClick={() => setTab('vincularExames')}
-            className={`${Outfit400.className} ${tab === 'vincularExames' && 'border-b-2 border-[#0F9B7F] bg-white'} h-[56px] rounded-tl-[8px] rounded-tr-[8px] px-2 text-[16px] text-[#222]`}
+            onClick={() => setTab('planos')}
+            className={`${Outfit400.className} ${tab === 'planos' && 'border-b-2 border-[#0F9B7F] bg-white'} h-[56px] rounded-tl-[8px] rounded-tr-[8px] px-2 text-[16px] text-[#222]`}
           >
             PLANOS
           </button>
           <button
             type="button"
-            onClick={() => setTab('vincularExames')}
-            className={`${Outfit400.className} ${tab === 'vincularExames' && 'border-b-2 border-[#0F9B7F] bg-white'} h-[56px] rounded-tl-[8px] rounded-tr-[8px] px-2 text-[16px] text-[#222]`}
+            onClick={() => setTab('instrucoes')}
+            className={`${Outfit400.className} ${tab === 'instrucoes' && 'border-b-2 border-[#0F9B7F] bg-white'} h-[56px] rounded-tl-[8px] rounded-tr-[8px] px-2 text-[16px] text-[#222]`}
           >
             INSTRUÇÕES
           </button>

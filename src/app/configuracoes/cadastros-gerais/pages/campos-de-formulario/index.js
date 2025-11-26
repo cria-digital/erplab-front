@@ -6,7 +6,6 @@ import { Outfit300, Outfit400 } from '@/fonts'
 import {
   DeleteAlternative,
   listAllFormField,
-  listFormFields,
   UpdateStatusField,
 } from '@/helpers'
 import useDebounce from '@/hooks/useDebounce'
@@ -49,11 +48,11 @@ const CamposDeFormulario = ({
       try {
         const [lisFormFields, lstFields] = await Promise.all([
           listAllFormField(),
-          listFormFields(),
+          listAllFormField('', 1, 1000),
         ])
 
         // mantém apenas itens com alternativas = 0 (ou inexistente)
-        const zeroAltItems = (lstFields?.data ?? []).filter(
+        const zeroAltItems = (lstFields?.data.data ?? []).filter(
           (e) => !Array.isArray(e.alternativas) || e.alternativas.length === 0,
         )
 
@@ -76,11 +75,11 @@ const CamposDeFormulario = ({
     try {
       const [lisFormFields, lstFields] = await Promise.all([
         listAllFormField(term, page, limit),
-        listFormFields(),
+        listAllFormField('', 1, 1000),
       ])
 
       // mantém apenas itens com alternativas = 0 (ou inexistente)
-      const zeroAltItems = (lstFields?.data ?? []).filter(
+      const zeroAltItems = (lstFields?.data.data ?? []).filter(
         (e) => !Array.isArray(e.alternativas) || e.alternativas.length === 0,
       )
 
@@ -330,9 +329,9 @@ const CamposDeFormulario = ({
           })}
         </tbody>
       </table>
-      <div className="flex h-[40px] items-center justify-between">
+      <div className="flex h-10 items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-[40px] w-[61px] items-center rounded-[8px] bg-[#F9F9F9]">
+          <div className="flex h-10 w-[61px] items-center rounded-lg bg-[#F9F9F9]">
             <span
               className={`${Outfit400.className} pl-2 text-[16px] text-[#222]`}
             >

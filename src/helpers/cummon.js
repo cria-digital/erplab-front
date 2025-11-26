@@ -48,7 +48,7 @@ export async function SearchCNAE(term) {
   } catch (error) {
     console.log(error)
     const fallback = {
-      message: 'Erro ao tentar logar',
+      message: 'Erro ao tentar buscar CNAEs',
       statusCode: 500,
       error: 'UnknownError',
     }
@@ -149,7 +149,6 @@ export async function SearchStates() {
 }
 
 export async function SearchCities(UF) {
-  console.log(UF)
   try {
     const cookie = await cookies()
     const token = cookie.get(TOKEN_KEY)
@@ -160,6 +159,107 @@ export async function SearchCities(UF) {
         Authorization: 'Bearer ' + token.value,
       },
     })
+
+    return {
+      success: true,
+      data: auth.data,
+    }
+  } catch (error) {
+    const fallback = {
+      message: error.response.data,
+      statusCode: 500,
+      error: 'UnknownError',
+    }
+
+    return {
+      success: false,
+      error: fallback,
+    }
+  }
+}
+
+//
+
+export async function SearchCadastroPaciente() {
+  try {
+    const cookie = await cookies()
+    const token = cookie.get(TOKEN_KEY)
+
+    const auth = await api.get(
+      '/api/v1/configuracoes-campos/campos-disponiveis/cadastro_paciente',
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token.value,
+        },
+      },
+    )
+
+    return {
+      success: true,
+      data: auth.data,
+    }
+  } catch (error) {
+    const fallback = {
+      message: error.response.data,
+      statusCode: 500,
+      error: 'UnknownError',
+    }
+
+    return {
+      success: false,
+      error: fallback,
+    }
+  }
+}
+
+export async function SearchOrdemDeServico() {
+  try {
+    const cookie = await cookies()
+    const token = cookie.get(TOKEN_KEY)
+
+    const auth = await api.get(
+      '/api/v1/configuracoes-campos/campos-disponiveis/ordem_servico',
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token.value,
+        },
+      },
+    )
+
+    return {
+      success: true,
+      data: auth.data,
+    }
+  } catch (error) {
+    const fallback = {
+      message: error.response.data,
+      statusCode: 500,
+      error: 'UnknownError',
+    }
+
+    return {
+      success: false,
+      error: fallback,
+    }
+  }
+}
+
+export async function SearchTiss() {
+  try {
+    const cookie = await cookies()
+    const token = cookie.get(TOKEN_KEY)
+
+    const auth = await api.get(
+      '/api/v1/configuracoes-campos/campos-disponiveis/tiss',
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token.value,
+        },
+      },
+    )
 
     return {
       success: true,
