@@ -15,8 +15,10 @@ const SelectRegister = ({
   setModalRegisterUnits,
   setModalRegisterExams,
   setModalRegisterUser,
+  setModalRegisterAgendas,
   setModalRegisterMethods,
   setModalRegisterAmostras,
+  setModalRegisterKits,
   setModalRegisterExamMatrix,
   setModalRegisterCompanies,
   setModalRegisterBanks,
@@ -42,11 +44,17 @@ const SelectRegister = ({
         setModalRegisterUser={() => {
           setModalRegisterUser(true)
         }}
+        setModalRegisterAgendas={() => {
+          setModalRegisterAgendas(true)
+        }}
         setModalRegisterMethods={() => {
           setModalRegisterMethods(true)
         }}
         setModalRegisterAmostras={() => {
           setModalRegisterAmostras(true)
+        }}
+        setModalRegisterKits={() => {
+          setModalRegisterKits(true)
         }}
       />
     ),
