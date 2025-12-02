@@ -14,7 +14,7 @@ const CertificadoDigital = ({ formik }) => {
   const [openModalSuccess, setOpenModalSuccess] = useState(false)
   const [openModalError, setOpenModalError] = useState(false)
   const [openModalRemove, setOpenModalRemove] = useState(false)
-  const [openModalSuccessRemove, setOpenModalSucessRemove] = useState(true)
+  const [openModalSuccessRemove, setOpenModalSucessRemove] = useState(false)
 
   return (
     <div className="flex flex-col gap-4">
