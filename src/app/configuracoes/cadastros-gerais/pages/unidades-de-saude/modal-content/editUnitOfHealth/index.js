@@ -1,11 +1,11 @@
 import ModalFramer from '@/components/ModalFramer'
 import { Outfit400, Outfit500 } from '@/fonts'
-import { ListAllCNAEs, listAllServicesOfHealth, UpdateUnit } from '@/helpers'
+import { listAllServicesOfHealth, listBankAccount, UpdateUnit } from '@/helpers'
 import { useFormik } from 'formik'
 import { useEffect, useState } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
+import { validationSchemaCreateUnit } from '../components/schema'
 import SuccessEdit from './components/SuccessEdit'
-import { validationSchemaCreateUnit } from './schema'
 
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
@@ -18,18 +18,19 @@ import Horarios from './components/horarios'
 import Impostos from './components/impostos'
 import InformacoesBasicas from './components/informacoesBasicas'
 import Responsaveis from './components/responsaveis'
+import { formatCNAE } from '@/utils'
 dayjs.extend(customParseFormat)
 
 const EditUnityOfHealth = ({ onClose, findData, unit }) => {
-  console.log(unit)
   // Loading
   const [loading, setLoading] = useState(false)
 
   // Coisas
   const [services, setServices] = useState([])
-  const [CNAEs, setCNAES] = useState([])
 
   const [openModalAlerts, setOpenModalAlerts] = useState(false)
+
+  const [banks, setBanks] = useState([])
 
   // Dias de atendimento
   const [openingHours] = useState(() => {
@@ -72,9 +73,9 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
   useEffect(() => {
     const findUsersByFilters = async () => {
       try {
-        const [allServices, allCnaes] = await Promise.all([
+        const [allServices, AllAccounts] = await Promise.all([
           listAllServicesOfHealth(),
-          ListAllCNAEs(),
+          listBankAccount('', '', '', '', 100000),
         ])
 
         const servcs = allServices.data.map((item) => {
@@ -99,21 +100,17 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
           csecundarios,
         )
 
-        const cns = allCnaes.data.map((item) => {
+        const acc = AllAccounts.data.data.map((item) => {
           return {
             id: item.id,
-            label: `${item.codigo} - ${item.descricao}`,
+            label: `${item.banco.nome} - ${item.observacoes} - ${item.agencia}-${item.digito_agencia}/${item.numero_conta}-${item.digito_conta}`,
           }
         })
 
-        const principalCnae = cns.find(
-          (element) => element.id === unit?.cnaePrincipalId,
-        )
-
-        formik.setFieldValue('cnaePrincipal', principalCnae)
+        // formik.setFieldValue('cnaePrincipal', principalCnae)
 
         setServices(servcs)
-        setCNAES(cns)
+        setBanks(acc)
       } catch (error) {
         console.error(error)
       }
@@ -122,6 +119,8 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
     findUsersByFilters()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  console.log(unit)
 
   const formik = useFormik({
     validationSchema: validationSchemaCreateUnit,
@@ -149,7 +148,7 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
         unit?.cnaeSecundarios?.map((c) => {
           return {
             id: c?.cnae?.id,
-            label: `${c?.cnae?.codigo} - ${c?.cnae?.descricao}`,
+            label: `${formatCNAE(c?.cnae?.codigo)} - ${c?.cnae?.descricao}`,
           }
         }) || [],
 
@@ -191,25 +190,12 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
       optantePeloSimples: unit?.optanteSimplesNacional,
 
       // financeiro
-      financeiro: unit?.contas_bancarias.map((i) => {
+      financeiro: unit.contas_bancarias.map((item) => {
         return {
-          banco: i.conta_bancaria?.banco?.nome, // não tem
-          codigoBanco: i.conta_bancaria?.banco?.codigo, // não tem
-          bancoId: i.conta_bancaria?.banco_id, // id interno/opcional
-          agencia: i.conta_bancaria?.agencia,
-          tipoDeConta:
-            i.conta_bancaria?.tipo_conta === 'corrente'
-              ? {
-                  id: 'corrente',
-                  label: 'CORRENTE',
-                }
-              : {
-                  id: 'poupanca',
-                  label: 'POUPANÇA',
-                },
-          digitoAgencia: i.conta_bancaria?.digito_agencia,
-          conta: i.conta_bancaria?.numero_conta,
-          digitoConta: i.conta_bancaria?.digito_conta,
+          conta: {
+            id: item?.conta_bancaria?.id,
+            label: `${item?.conta_bancaria?.banco?.nome} - ${item?.conta_bancaria?.observacoes} - ${item?.conta_bancaria?.agencia}-${item?.conta_bancaria?.digito_agencia}/${item?.conta_bancaria?.numero_conta}-${item?.conta_bancaria?.digito_conta}`,
+          },
         }
       }),
 
@@ -274,16 +260,13 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
             semIntervalo: item.enabled,
           })),
         ),
-        contas_bancarias: values.financeiro.map((e) => {
-          return {
-            banco_id: e.bancoId,
-            agencia: e.agencia,
-            numero_conta: e.conta,
-            digito_agencia: e.digitoAgencia,
-            digito_conta: e.digitoConta,
-            tipo_conta: e.tipoDeConta.id,
-          }
-        }),
+        contas_bancarias: values.financeiro
+          .filter((e) => e?.conta) // só entra quem tem conta diferente de null/undefined
+          .map((e) => {
+            return {
+              conta_bancaria_id: e.conta.id,
+            }
+          }),
       }
 
       try {
@@ -369,7 +352,7 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
         className="flex h-screen flex-col bg-[#F9F9F9]"
         onSubmit={() => null}
       >
-        <div className="flex h-[88px] items-center justify-between border-b border-[#E7E7E7] bg-[#fff] px-[48px]">
+        <div className="flex h-[88px] items-center justify-between border-b border-[#E7E7E7] bg-white px-12">
           <div className="flex flex-col">
             <span
               className={` ${Outfit400.className} text-[16px] text-[#0F9B7F]`}
@@ -382,11 +365,11 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
               Unidades de saúde
             </span>
           </div>
-          <div className="flex gap-[16px]">
+          <div className="flex gap-4">
             <button
               type="button"
               onClick={() => onClose()}
-              className="flex h-[44px] w-[108px] items-center justify-evenly rounded-[8px] border border-[#F23434]"
+              className="flex h-11 w-[108px] items-center justify-evenly rounded-lg border border-[#F23434]"
             >
               <span
                 className={`${Outfit400.className} text-[#F23434] uppercase`}
@@ -397,7 +380,7 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
             <button
               type="button"
               onClick={handleValidateAndSubmit}
-              className={`flex h-[44px] w-[128px] items-center justify-evenly rounded-[8px] ${
+              className={`flex h-11 w-32 items-center justify-evenly rounded-lg ${
                 formik.isValid
                   ? 'bg-[#0F9B7F] text-white hover:from-[#3BC1E2] hover:to-[#1D6F87]'
                   : 'bg-[#A9A9A9] text-[#494949]'
@@ -413,13 +396,9 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
 
         {/* <div className="flex h-full w-full gap-x-3 overflow-x-auto"> */}
         <div className="flex h-full w-screen gap-x-3 overflow-x-auto">
-          <div className="mx-[48px] my-[28px] flex h-fit flex-1 flex-col gap-[32px] rounded bg-[#fff] p-[48px]">
+          <div className="mx-12 my-7 flex h-fit flex-1 flex-col gap-8 rounded bg-white p-12">
             {/* informacoes */}
-            <InformacoesBasicas
-              formik={formik}
-              services={services}
-              CNAEs={CNAEs}
-            />
+            <InformacoesBasicas formik={formik} services={services} />
             {/* endereco */}
             <Endereco formik={formik} />
             {/* horários */}
@@ -429,7 +408,7 @@ const EditUnityOfHealth = ({ onClose, findData, unit }) => {
             {/* impostos */}
             <Impostos formik={formik} />
             {/* financeiro */}
-            <Financeiro formik={formik} />
+            <Financeiro formik={formik} banks={banks} />
             {/* certificado digital */}
             <CertificadoDigital formik={formik} />
           </div>
