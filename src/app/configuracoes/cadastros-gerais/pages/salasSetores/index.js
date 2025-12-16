@@ -63,7 +63,9 @@ const SalasSetores = () => {
           setSalasSetores(sls.data.data)
           setTotal(sls.data.meta.total)
         }
-        setFields(fields?.data?.data)
+        if (fields.success) {
+          setFields(fields?.data?.data)
+        }
       } catch (error) {
         console.log('erro', error)
       }
